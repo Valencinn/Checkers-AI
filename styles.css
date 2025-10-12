@@ -1,3 +1,7 @@
+body {
+    background: #88a;
+}
+
 .checkers-wrapper {
     display: flex;
     flex-grow: 1;
@@ -6,24 +10,29 @@
     justify-content: center;
 }
 
+#board {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .checkers-board {
     background: #fff;
-    width: 320px;
-    height: 320px;
+    width: 500px;
+    height: 500px;
     display: flex;
     flex-wrap: wrap;
 }
 
-.checkers-grid{
+.checkers-grid {
     width: 12.5%;
     height: 12.5%;
 }
 
-.dark-square{
+.dark-square {
     background: #345;
 }
 
-.light-square{
+.light-square {
     background: #eef;
 }
-
