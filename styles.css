@@ -25,6 +25,7 @@ body {
 }
 
 .checkers-grid {
+    position: relative;
     width: 12.5%;
     height: 12.5%;
 }
@@ -35,4 +36,21 @@ body {
 
 .light-square {
     background: #eef;
+}
+
+.checkers-piece{
+    top: 10%;
+    left: 10%;
+    position: relative;
+    width: 80%;
+    height: 80%;
+    border-radius: 100%;
+}
+
+.checkers-piece-red{
+        background: #f21832;
+}
+
+.checkers-piece-blue{
+        background: #858cef;
 }
