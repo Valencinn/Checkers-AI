@@ -38,7 +38,7 @@ body {
     background: #eef;
 }
 
-.checkers-piece{
+.checkers-piece {
     top: 10%;
     left: 10%;
     position: relative;
@@ -47,10 +47,15 @@ body {
     border-radius: 100%;
 }
 
-.checkers-piece-red{
-        background: #f21832;
+.checkers-piece-red {
+    background: #f21832;
 }
 
-.checkers-piece-blue{
-        background: #858cef;
+.checkers-piece-blue {
+    background: #858cef;
+}
+
+.highlight {
+    outline: 3px solid rgba(0, 255, 0, 0.6);
+    cursor: pointer;
 }
