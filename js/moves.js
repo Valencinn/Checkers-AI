@@ -42,7 +42,7 @@ export default class Moves {
     }
 
     getValidMoves(piece) {
-        const fieldNum = parseInt(piece.parentElement.getAttribute('data-num'));
+        const fieldNum = parseInt(piece.parentElement.getAttribute('data-num')); //obtenemos el numero de la casilla cuando clickea la pieza
         const num = fieldNum;
         const row = Math.floor(num / 8);
         const col = num % 8;
@@ -50,19 +50,19 @@ export default class Moves {
 
         const directions = [];
 
-        if (color === 'red') directions.push([1, -1], [1, 1]);
-        else directions.push([-1, -1], [-1, 1]);
+        if (color === 'red') directions.push([1, -1], [1, 1]); //si el color eso rojo, puede moverse hacia adelante
+        else directions.push([-1, -1], [-1, 1]); //si es azul, puede moverse hacia atras
 
         const moves = [];
 
-        directions.forEach(([dr, dc]) => {
+        directions.forEach(([dr, dc]) => { 
             const newRow = row + dr;
             const newCol = col + dc;
             if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
-                const targetNum = newRow * 8 + newCol;
-                const targetSquare = this.board.fieldsByNum[targetNum];
-                const hasPiece = targetSquare.querySelector('.checkers-piece');
-                if (!hasPiece) moves.push(targetSquare);
+                const targetNum = newRow * 8 + newCol; // calcula el numero de la casilla target
+                const targetSquare = this.board.fieldsByNum[targetNum]; //obtiene la casilla target
+                const hasPiece = targetSquare.querySelector('.checkers-piece'); //verifica si hay una pieza en la casilla destino
+                if (!hasPiece) moves.push(targetSquare); //si no hay pieza, es un movimiento valido
             }
         });
 
@@ -81,7 +81,7 @@ export default class Moves {
         });
     }
 
-    movePiece(piece, targetSquare) {
+    movePiece(piece, targetSquare) { //le pasamos como parametros la pieza y la casilla target!
         targetSquare.appendChild(piece);
     }
 }

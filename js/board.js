@@ -7,7 +7,7 @@ class Board {
     constructor() {
         this.el = document.createElement('div');
         this.el.className = 'checkers-board';
-        this.fieldsByNum = {};
+        this.fieldsByNum = {}; //objeto para guardar las casillas por su numero
 
         this.initialize();
     }
@@ -27,12 +27,12 @@ class Board {
 
         const dark = Boolean((row + col) % 2); //para que se alternen los colores
         if (dark) {
-            el.className += 'dark-square';
+            el.className += 'dark-square'; 
         } else {
             el.className += 'light-square';
         }
 
-        let num = row * 8 + col; //numero de casillas 1 al 64
+        let num = row * 8 + col; //numero de casillas del 0 al 63, es lo mismo que decir 1 al 64
 
         el.setAttribute('data-num', num); //le asignamos un numero a cada casilla
         this.fieldsByNum[num] = el; //guardamos las casillas en un array para despues tener acceso a estas
@@ -40,18 +40,19 @@ class Board {
         return el;
     }
 
+    //llena el tablero con piezas
     fillWithPieces() {
 
         for (let i = 0; i < 3; i+=1) { //para las rojas
             for (let j = 0; j < 4; j+= 1) {
                 let piece = new Piece("red");
-                const field = this.fieldsByNum[i * 8 + (j * 2) + ((i + 1) % 2)];
+                const field = this.fieldsByNum[i * 8 + (j * 2) + ((i + 1) % 2)]; // el calculo es: fila * 8 + (columna * 2) + ((fila + 1) % 2).
                 piece.setField(field);
 
             }
         }
 
-        for (let i = 5; i < 8; i+=1) { //para las negras/azules
+        for (let i = 5; i < 8; i+=1) { //para las negras/azules 
             for (let j = 0; j < 4; j+= 1) {
                 let piece = new Piece("blue");
                 const field = this.fieldsByNum[i * 8 + (j * 2) + ((i + 1) % 2)];
@@ -60,6 +61,7 @@ class Board {
         }
     }
 
+    //mete el tablero en el contenedor
     appendTo(container) {
         container.appendChild(this.el);
     }
