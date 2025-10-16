@@ -1,0 +1,10 @@
+MOVIMIENTOS: 
+
+- Comer pieza -> X
+- Comer pieza continuo -> X
+- Coronar -> X
+
+SISTEMA DE JUEGO:
+
+- Notacion -> X
+- Cambio de turno -> X
