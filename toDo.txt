@@ -8,3 +8,8 @@ SISTEMA DE JUEGO:
 
 - Notacion -> X
 - Cambio de turno -> X
+
+PROXIMA SEMANA: 
+
+- Estado del juego 
+- comer pieza, comer pieza continuo, coronar
