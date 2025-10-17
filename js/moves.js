@@ -84,4 +84,6 @@ export default class Moves {
     movePiece(piece, targetSquare) { //le pasamos como parametros la pieza y la casilla target!
         targetSquare.appendChild(piece);
     }
+
+    eatPiece(){}; //funcion para comer piezas, cy comer 
 }
