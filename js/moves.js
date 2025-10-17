@@ -28,7 +28,7 @@ export default class Moves {
             //Guardamos la ficha seleccionada
             this.selectedPiece = piece;
 
-            //Calculamos movimientos válidos (ahora retorna objetos {square, capture})
+            //Calculamos movimientos validos (ahora retorna objetos {square, capture})
             const moves = this.getValidMoves(piece);
 
             //Mostramos los movimientos resaltando casillas
@@ -56,11 +56,8 @@ export default class Moves {
 
         const directions = [];
 
-        // direcciones diagonales relativas según color (las "normales")
-        if (color === 'red') directions.push([1, -1], [1, 1]); //avanza hacia filas + (hacia "abajo" visual)
+        if (color === 'red') directions.push([1, -1], [1, 1]); //avanza hacia filas + (hacia "abajo")
         else directions.push([-1, -1], [-1, 1]); //azul hacia filas - (hacia "arriba")
-
-        // si en el futuro agregás coronas, podés permitir todas las direcciones
 
         const moves = [];
 
@@ -83,7 +80,7 @@ export default class Moves {
                         // casilla mas alla para salto
                         const jumpRow = row + dr * 2;
                         const jumpCol = col + dc * 2;
-                        if (this.isOnBoard(jumpRow, jumpCol)) { //este if es para comer la pieza
+                        if (this.isOnBoard(jumpRow, jumpCol)) {
                             const jumpNum = jumpRow * 8 + jumpCol;
                             const jumpSquare = this.board.fieldsByNum[jumpNum];
                             const hasPieceAtJump = jumpSquare.querySelector('.checkers-piece');
@@ -128,7 +125,7 @@ export default class Moves {
         // elimina pieza capturada si corresponde
         if (captureNum !== null && !Number.isNaN(captureNum)) {
             const middleSquare = this.board.fieldsByNum[captureNum];
-            const pieceToEat = middleSquare.querySelector('.checkers-piece');
+            const pieceToEat = middleSquare.querySelector('.checkers-piece'); //come la pieza que esta en el adyacente definido arriba
             if (pieceToEat) pieceToEat.remove();
         }
 
