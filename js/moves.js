@@ -2,8 +2,9 @@
 import Piece from './piece.js';
 
 export default class Moves {
-    constructor(board) {
+    constructor(board, game) {
         this.board = board;
+        this.game = game;
         this.selectedPiece = null;
 
         this.addClickEvents();
@@ -20,30 +21,29 @@ export default class Moves {
     handleClick(square) {
         const piece = square.querySelector('.checkers-piece');
 
-        // si clickeamos una pieza
+        // Si clickeamos una pieza
         if (piece) {
-            //si hay otra seleccionada, limpiamos
+            const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
+            // solo puede mover si es su turno (si el color de la pieza es igual al jugador actual)
+            if (color !== this.game.currentPlayer) return;
+
             this.clearHighlights();
-
-            //Guardamos la ficha seleccionada
             this.selectedPiece = piece;
-
-            //Calculamos movimientos validos (ahora retorna objetos {square, capture})
             const moves = this.getValidMoves(piece);
-
-            //Mostramos los movimientos resaltando casillas
             this.highlightMoves(moves);
 
-        //si clickeamos una casilla válida
         } else if (this.selectedPiece && square.classList.contains('highlight')) {
-            // obtenemos si esta casilla tiene data-capture (num de casilla capturada)
-            const captureData = square.getAttribute('data-capture');
-            const captureNum = captureData !== null ? parseInt(captureData) : null;
+            // obtenemos el numero de la pieza capturada (si lo hay)
+            const captureAttr = square.getAttribute('data-capture');
+            const captureNum = captureAttr ? parseInt(captureAttr) : null;
 
             this.movePiece(this.selectedPiece, square, captureNum);
 
             this.clearHighlights();
             this.selectedPiece = null;
+
+            // cambiar el turno cuando termina el movimiento
+            this.game.switchTurn();
         }
     }
 
@@ -129,9 +129,7 @@ export default class Moves {
             if (pieceToEat) pieceToEat.remove();
         }
 
-        // Mueve la pieza visualmente
+        //mueve la pieza visualmente
         targetSquare.appendChild(piece);
-
-        // (Opcional) si quieres, podrías comprobar aquí promoción a rey, o turno contrario, etc.
     }
 }
