@@ -6,58 +6,71 @@ export default class Moves {
         this.board = board;
         this.game = game;
         this.selectedPiece = null;
-
         this.addClickEvents();
     }
 
     addClickEvents() {
-        const squares = Object.values(this.board.fieldsByNum); //obtiene todas las casillas del tablero
-
+        const squares = Object.values(this.board.fieldsByNum);
         squares.forEach(square => {
-            square.addEventListener('click', (e) => this.handleClick(square)); //le agrega clic a la casilla
+            square.addEventListener('click', () => this.handleClick(square));
         });
     }
 
     handleClick(square) {
         const piece = square.querySelector('.checkers-piece');
 
-        // Si clickeamos una pieza
+        // Clic en una pieza
         if (piece) {
             const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
-            // solo puede mover si es su turno (si el color de la pieza es igual al jugador actual)
             if (color !== this.game.currentPlayer) return;
 
             this.clearHighlights();
             this.selectedPiece = piece;
+
             const moves = this.getValidMoves(piece);
             this.highlightMoves(moves);
 
+        // Clic en una casilla válida
         } else if (this.selectedPiece && square.classList.contains('highlight')) {
-            // obtenemos el numero de la pieza capturada (si lo hay)
             const captureAttr = square.getAttribute('data-capture');
             const captureNum = captureAttr ? parseInt(captureAttr) : null;
 
-            this.movePiece(this.selectedPiece, square, captureNum);
+            const didCapture = this.movePiece(this.selectedPiece, square, captureNum);
 
             this.clearHighlights();
-            this.selectedPiece = null;
 
-            // cambiar el turno cuando termina el movimiento
+            // si comió, verificamos si puede seguir comiendo
+            if (didCapture) {
+                const nextMoves = this.getValidMoves(this.selectedPiece).filter(m => m.capture !== null);
+                if (nextMoves.length > 0) {
+                    this.highlightMoves(nextMoves);
+                    return; // no cambia turno aún
+                }
+            }
+
+            // si no hay más capturas, termina el turno
+            this.selectedPiece = null;
             this.game.switchTurn();
         }
     }
 
     getValidMoves(piece) {
-        const fieldNum = parseInt(piece.parentElement.getAttribute('data-num')); //obtenemos el numero de la casilla cuando clickea la pieza
-        const num = fieldNum;
-        const row = Math.floor(num / 8);
-        const col = num % 8;
+        const fieldNum = parseInt(piece.parentElement.getAttribute('data-num'));
+        const row = Math.floor(fieldNum / 8);
+        const col = fieldNum % 8;
         const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
+        const isKing = piece.classList.contains('king');
 
         const directions = [];
 
-        if (color === 'red') directions.push([1, -1], [1, 1]); //avanza hacia filas + (hacia "abajo")
-        else directions.push([-1, -1], [-1, 1]); //azul hacia filas - (hacia "arriba")
+        // direcciones básicas
+        if (isKing) {
+            directions.push([1, -1], [1, 1], [-1, -1], [-1, 1]);
+        } else if (color === 'red') {
+            directions.push([1, -1], [1, 1]);
+        } else {
+            directions.push([-1, -1], [-1, 1]);
+        }
 
         const moves = [];
 
@@ -65,19 +78,17 @@ export default class Moves {
             const adjRow = row + dr;
             const adjCol = col + dc;
 
-            // movimiento simple (una casilla diagonal)
             if (this.isOnBoard(adjRow, adjCol)) {
                 const targetNum = adjRow * 8 + adjCol;
                 const targetSquare = this.board.fieldsByNum[targetNum];
                 const hasPiece = targetSquare.querySelector('.checkers-piece');
+
                 if (!hasPiece) {
                     moves.push({ square: targetSquare, capture: null });
                 } else {
-                    // si hay una pieza en la casilla adyacente, comprobamos si es rival
                     const adjPiece = hasPiece;
                     const adjColor = adjPiece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
                     if (adjColor !== color) {
-                        // casilla mas alla para salto
                         const jumpRow = row + dr * 2;
                         const jumpCol = col + dc * 2;
                         if (this.isOnBoard(jumpRow, jumpCol)) {
@@ -85,7 +96,6 @@ export default class Moves {
                             const jumpSquare = this.board.fieldsByNum[jumpNum];
                             const hasPieceAtJump = jumpSquare.querySelector('.checkers-piece');
                             if (!hasPieceAtJump) {
-                                // movimiento de captura: guardamos cual es la casilla intermedia (adyacente)
                                 moves.push({ square: jumpSquare, capture: targetNum });
                             }
                         }
@@ -106,7 +116,6 @@ export default class Moves {
             const square = move.square;
             square.classList.add('highlight');
             if (move.capture !== null) {
-                // guardamos el número de casilla capturada para usarlo luego
                 square.setAttribute('data-capture', move.capture);
             } else {
                 square.removeAttribute('data-capture');
@@ -122,14 +131,31 @@ export default class Moves {
     }
 
     movePiece(piece, targetSquare, captureNum = null) {
-        // elimina pieza capturada si corresponde
+        let didCapture = false;
+
+        // eliminar pieza capturada
         if (captureNum !== null && !Number.isNaN(captureNum)) {
             const middleSquare = this.board.fieldsByNum[captureNum];
-            const pieceToEat = middleSquare.querySelector('.checkers-piece'); //come la pieza que esta en el adyacente definido arriba
-            if (pieceToEat) pieceToEat.remove();
+            const pieceToEat = middleSquare.querySelector('.checkers-piece');
+            if (pieceToEat) {
+                pieceToEat.remove();
+                didCapture = true;
+            }
         }
 
-        //mueve la pieza visualmente
+        // mover la pieza
         targetSquare.appendChild(piece);
+
+        // coronar
+        const targetNum = parseInt(targetSquare.getAttribute('data-num'));
+        const row = Math.floor(targetNum / 8);
+        const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
+        if ((color === 'red' && row === 7) || (color === 'blue' && row === 0)) {
+            piece.classList.add('king');
+            piece.innerHTML = '👑';
+        }
+
+        return didCapture;
     }
 }
+

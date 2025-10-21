@@ -1,13 +1,13 @@
 MOVIMIENTOS: 
 
-- Comer pieza -> X
+- Comer pieza -> HECHO
 - Comer pieza continuo -> X
 - Coronar -> X
 
 SISTEMA DE JUEGO:
 
 - Notacion -> X
-- Cambio de turno -> X
+- Cambio de turno -> HECHO
 
 PROXIMA SEMANA: 
 
