@@ -30,7 +30,7 @@ export default class Moves {
             const moves = this.getValidMoves(piece);
             this.highlightMoves(moves);
 
-        // Clic en una casilla válida
+        // click en una casilla válida
         } else if (this.selectedPiece && square.classList.contains('highlight')) {
             const captureAttr = square.getAttribute('data-capture');
             const captureNum = captureAttr ? parseInt(captureAttr) : null;

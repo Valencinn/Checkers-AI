@@ -1,15 +1,16 @@
-MOVIMIENTOS: 
+IA: 
 
-- Comer pieza -> HECHO
-- Comer pieza continuo -> X
-- Coronar -> X
+ESTETICA:
+
+-Distintos tableros -> X
+-Caja de notacion -> X
+
 
 SISTEMA DE JUEGO:
 
 - Notacion -> X
-- Cambio de turno -> HECHO
+- Tablas -> X
 
 PROXIMA SEMANA: 
 
-- Estado del juego 
-- comer pieza, comer pieza continuo, coronar
+- Tablas -> X
