@@ -61,6 +61,17 @@ class Board {
         }
     }
 
+    getPiecesByColor(color) {
+        const pieces = [];
+        Object.values(this.fieldsByNum).forEach(square => {
+            const piece = square.querySelector('.checkers-piece');
+            if (piece && piece.classList.contains(`checkers-piece-${color}`)) {
+                pieces.push(piece);
+            }
+        });
+        return pieces;
+    }
+
     //mete el tablero en el contenedor
     appendTo(container) {
         container.appendChild(this.el);

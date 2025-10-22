@@ -1,4 +1,4 @@
-// moves.js
+
 import Piece from './piece.js';
 
 export default class Moves {
@@ -19,7 +19,7 @@ export default class Moves {
     handleClick(square) {
         const piece = square.querySelector('.checkers-piece');
 
-        // Clic en una pieza
+        // click en una pieza
         if (piece) {
             const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
             if (color !== this.game.currentPlayer) return;
@@ -39,73 +39,82 @@ export default class Moves {
 
             this.clearHighlights();
 
-            // si comió, verificamos si puede seguir comiendo
+            // si comio, verificamos si puede seguir comiendo
             if (didCapture) {
                 const nextMoves = this.getValidMoves(this.selectedPiece).filter(m => m.capture !== null);
                 if (nextMoves.length > 0) {
                     this.highlightMoves(nextMoves);
-                    return; // no cambia turno aún
+                    return; // no cambia turno aun
                 }
             }
 
-            // si no hay más capturas, termina el turno
+            // si no hay mas capturas, termina el turno
             this.selectedPiece = null;
             this.game.switchTurn();
         }
     }
 
     getValidMoves(piece) {
-        const fieldNum = parseInt(piece.parentElement.getAttribute('data-num'));
-        const row = Math.floor(fieldNum / 8);
-        const col = fieldNum % 8;
-        const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
-        const isKing = piece.classList.contains('king');
+    const fieldNum = parseInt(piece.parentElement.getAttribute('data-num'));
+    const row = Math.floor(fieldNum / 8);
+    const col = fieldNum % 8;
+    const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
+    const isKing = piece.classList.contains('king');
 
-        const directions = [];
+    const directions = [];
+    if (isKing) {
+        directions.push([1, -1], [1, 1], [-1, -1], [-1, 1]);
+    } else if (color === 'red') {
+        directions.push([1, -1], [1, 1]);
+    } else {
+        directions.push([-1, -1], [-1, 1]);
+    }
 
-        // direcciones básicas
-        if (isKing) {
-            directions.push([1, -1], [1, 1], [-1, -1], [-1, 1]);
-        } else if (color === 'red') {
-            directions.push([1, -1], [1, 1]);
-        } else {
-            directions.push([-1, -1], [-1, 1]);
-        }
+    const moves = [];
 
-        const moves = [];
+    directions.forEach(([dr, dc]) => {
+        const adjRow = row + dr;
+        const adjCol = col + dc;
 
-        directions.forEach(([dr, dc]) => {
-            const adjRow = row + dr;
-            const adjCol = col + dc;
+        if (this.isOnBoard(adjRow, adjCol)) {
+            const targetNum = adjRow * 8 + adjCol;
+            const targetSquare = this.board.fieldsByNum[targetNum];
+            const hasPiece = targetSquare.querySelector('.checkers-piece');
 
-            if (this.isOnBoard(adjRow, adjCol)) {
-                const targetNum = adjRow * 8 + adjCol;
-                const targetSquare = this.board.fieldsByNum[targetNum];
-                const hasPiece = targetSquare.querySelector('.checkers-piece');
-
-                if (!hasPiece) {
-                    moves.push({ square: targetSquare, capture: null });
-                } else {
-                    const adjPiece = hasPiece;
-                    const adjColor = adjPiece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
-                    if (adjColor !== color) {
-                        const jumpRow = row + dr * 2;
-                        const jumpCol = col + dc * 2;
-                        if (this.isOnBoard(jumpRow, jumpCol)) {
-                            const jumpNum = jumpRow * 8 + jumpCol;
-                            const jumpSquare = this.board.fieldsByNum[jumpNum];
-                            const hasPieceAtJump = jumpSquare.querySelector('.checkers-piece');
-                            if (!hasPieceAtJump) {
-                                moves.push({ square: jumpSquare, capture: targetNum });
-                            }
+            if (!hasPiece) {
+                moves.push({ square: targetSquare, capture: null });
+            } else {
+                const adjPiece = hasPiece;
+                const adjColor = adjPiece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
+                if (adjColor !== color) {
+                    const jumpRow = row + dr * 2;
+                    const jumpCol = col + dc * 2;
+                    if (this.isOnBoard(jumpRow, jumpCol)) {
+                        const jumpNum = jumpRow * 8 + jumpCol;
+                        const jumpSquare = this.board.fieldsByNum[jumpNum];
+                        if (!jumpSquare.querySelector('.checkers-piece')) {
+                            moves.push({ square: jumpSquare, capture: targetNum });
                         }
                     }
                 }
             }
-        });
+        }
+    });
 
-        return moves;
-    }
+    return moves;
+}
+
+getAllPossibleMoves(color) {
+    const pieces = this.board.getPiecesByColor(color);
+    let allMoves = [];
+
+    pieces.forEach(piece => {
+        const pieceMoves = this.getValidMoves(piece);
+        allMoves = allMoves.concat(pieceMoves);
+    });
+
+    return allMoves;
+}
 
     isOnBoard(row, col) {
         return row >= 0 && row < 8 && col >= 0 && col < 8;
