@@ -14,7 +14,7 @@ class Game {
         this.board.fillWithPieces();
 
         this.moves = new Moves(this.board, this);
-        console.log('[Game] Moves creado:', this.moves); //verificacion del setteo de moves
+        console.log('moves inicializados'); //verificacion del setteo de moves
     }
 
     switchTurn() { //cambia el turno entre los jugadores
