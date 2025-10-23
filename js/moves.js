@@ -56,33 +56,33 @@ export default class Moves {
 
     getValidMoves(piece) {
     const fieldNum = parseInt(piece.parentElement.getAttribute('data-num'));
-    const row = Math.floor(fieldNum / 8);
-    const col = fieldNum % 8;
-    const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
-    const isKing = piece.classList.contains('king');
+    const row = Math.floor(fieldNum / 8); //creo la fila
+    const col = fieldNum % 8; //creo la columna
+    const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue'; //si no es rojo es azul
+    const isKing = piece.classList.contains('king'); //chequea si es un rey
 
-    const directions = [];
+    const directions = []; //direcciones cambia dependiendo si es rey o no
     if (isKing) {
         directions.push([1, -1], [1, 1], [-1, -1], [-1, 1]); //se puede mover para todas las diagonales
-    } else if (color === 'red') {
+    } else if (color === 'red') { //se mueve hacia abajo si es red
         directions.push([1, -1], [1, 1]);
     } else {
-        directions.push([-1, -1], [-1, 1]);
+        directions.push([-1, -1], [-1, 1]); //se mueve hacia arriba si es blue
     }
 
-    const moves = [];
+    const moves = []; //en este array guardamos los movimientos validos
 
     directions.forEach(([dr, dc]) => {
-        const adjRow = row + dr;
-        const adjCol = col + dc;
+        const adjRow = row + dr; //calcula la fila adyacente
+        const adjCol = col + dc; //calcula la columna adyacente
 
-        if (this.isOnBoard(adjRow, adjCol)) { //verificamos que la casilla este dentro del tablero
-            const targetNum = adjRow * 8 + adjCol;
-            const targetSquare = this.board.fieldsByNum[targetNum];
+        if (this.isOnBoard(adjRow, adjCol)) { //si la casilla adyacente este dentro del tablero...
+            const targetNum = adjRow * 8 + adjCol; //calcula el numero de la casilla adyacente 
+            const targetSquare = this.board.fieldsByNum[targetNum]; //lo targetea
             const hasPiece = targetSquare.querySelector('.checkers-piece');
 
             if (!hasPiece) { //si no tiene pieza, es un movimiento valido
-                moves.push({ square: targetSquare, capture: null });
+                moves.push({ square: targetSquare, capture: null }); // si en el target square no hay pieza, es un movimiento normal
             } else { //si tiene pieza, verificamos si es del oponente y si se puede saltar
                 const adjPiece = hasPiece;
                 const adjColor = adjPiece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
@@ -159,8 +159,8 @@ getAllPossibleMoves(color) { // obtiene todos los movimientos posibles para un c
         const targetNum = parseInt(targetSquare.getAttribute('data-num'));
         const row = Math.floor(targetNum / 8);
         const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
-        if ((color === 'red' && row === 7) || (color === 'blue' && row === 0)) {
-            piece.classList.add('king');
+        if ((color === 'red' && row === 7) || (color === 'blue' && row === 0)) { //si llega al fondo del tablero (acordate que funciona de 0 a 7 no de 1 a 8) corona
+            piece.classList.add('king'); //le agrega la clase king que le permite moverse libremente
             piece.innerHTML = '👑';
         }
 
