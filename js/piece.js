@@ -8,7 +8,7 @@ class Piece {
         this.el.className += `checkers-piece-${color}`; //le ponemos la clase del color
     }
 
-    setField(field) {
+    setField(field) { //asigna la pieza a una casilla
         this.field = field;
         this.field.appendChild(this.el);
     }

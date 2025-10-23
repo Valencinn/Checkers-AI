@@ -61,7 +61,7 @@ class Board {
         }
     }
 
-    getPiecesByColor(color) {
+    getPiecesByColor(color) { //devuelve todas las piezas de un color dado, usado para verificar si un jugador se quedo sin movimientos
         const pieces = [];
         Object.values(this.fieldsByNum).forEach(square => {
             const piece = square.querySelector('.checkers-piece');

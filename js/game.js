@@ -6,18 +6,18 @@ class Game {
         this.container = container;
         this.gameStatus = 'playing'; // estado del juego comienza en ON porque el juego se esta jugando
         this.winner = null; // ganador = null hasta que se defina
-        this.currentPlayer = 'blue';
-        console.log('[Game] currentPlayer inicial:', this.currentPlayer);
+        this.currentPlayer = 'blue'; //en las damas siempre comienza el color mas oscuro
+        console.log('[Game] Jugador inicial:', this.currentPlayer);
 
         this.board = new Board();
         this.board.appendTo(this.container);
         this.board.fillWithPieces();
 
         this.moves = new Moves(this.board, this);
-        console.log('[Game] Moves creado:', this.moves);
+        console.log('[Game] Moves creado:', this.moves); //verificacion del setteo de moves
     }
 
-    switchTurn() {
+    switchTurn() { //cambia el turno entre los jugadores
         this.currentPlayer = this.currentPlayer === 'red' ? 'blue' : 'red';
         console.log(`[Game] Ahora es el turno de: ${this.currentPlayer}`);
         this.checkGameStatus();
@@ -28,35 +28,24 @@ class Game {
         const bluePieces = this.board.getPiecesByColor('blue');
         const redPieces = this.board.getPiecesByColor('red');
 
-        // checkea si el jugador actual no tiene movimientos posibles
+        // checkea si el jugador actual no tiene movimientos posibles, no hace falta verificar las piezas ya que se queda sin piezas tambien se queda sin movimientos!
         if (possibleMoves.length === 0) {
             this.gameStatus = 'ended';
             this.winner = this.currentPlayer === 'red' ? 'blue' : 'red';
-            console.log(`[Game] Game Over! ${this.winner} wins by no possible moves!`);
+            console.log(`[Game] Game Over! ${this.winner} wins!`);
             return;
-        }
-
-        // checkear si los jugadores se han quedado sin piezas
-        if (bluePieces.length === 0) {
-            this.gameStatus = 'ended';
-            this.winner = 'red';
-            console.log('[Game] Game Over! Red wins!');
-        } else if (redPieces.length === 0) {
-            this.gameStatus = 'ended';
-            this.winner = 'blue';
-            console.log('[Game] Game Over! Blue wins!');
         }
     }
 
-    clear() {
+    clear() { //limpia el tablero
         this.container.innerHTML = '';
     }
 
-    isGameEnded() {
+    isGameEnded() { // verifica si el juego termino
         return this.gameStatus === 'ended';
     }
 
-    getWinner() {
+    getWinner() { //devuelve quien gano
         return this.winner;
     }
 }

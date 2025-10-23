@@ -63,7 +63,7 @@ export default class Moves {
 
     const directions = [];
     if (isKing) {
-        directions.push([1, -1], [1, 1], [-1, -1], [-1, 1]);
+        directions.push([1, -1], [1, 1], [-1, -1], [-1, 1]); //se puede mover para todas las diagonales
     } else if (color === 'red') {
         directions.push([1, -1], [1, 1]);
     } else {
@@ -76,19 +76,19 @@ export default class Moves {
         const adjRow = row + dr;
         const adjCol = col + dc;
 
-        if (this.isOnBoard(adjRow, adjCol)) {
+        if (this.isOnBoard(adjRow, adjCol)) { //verificamos que la casilla este dentro del tablero
             const targetNum = adjRow * 8 + adjCol;
             const targetSquare = this.board.fieldsByNum[targetNum];
             const hasPiece = targetSquare.querySelector('.checkers-piece');
 
-            if (!hasPiece) {
+            if (!hasPiece) { //si no tiene pieza, es un movimiento valido
                 moves.push({ square: targetSquare, capture: null });
-            } else {
+            } else { //si tiene pieza, verificamos si es del oponente y si se puede saltar
                 const adjPiece = hasPiece;
                 const adjColor = adjPiece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
                 if (adjColor !== color) {
-                    const jumpRow = row + dr * 2;
-                    const jumpCol = col + dc * 2;
+                    const jumpRow = row + dr * 2; //saltamos la fila
+                    const jumpCol = col + dc * 2;// saltamos la columna
                     if (this.isOnBoard(jumpRow, jumpCol)) {
                         const jumpNum = jumpRow * 8 + jumpCol;
                         const jumpSquare = this.board.fieldsByNum[jumpNum];
@@ -104,7 +104,7 @@ export default class Moves {
     return moves;
 }
 
-getAllPossibleMoves(color) {
+getAllPossibleMoves(color) { // obtiene todos los movimientos posibles para un color dado
     const pieces = this.board.getPiecesByColor(color);
     let allMoves = [];
 
@@ -116,11 +116,11 @@ getAllPossibleMoves(color) {
     return allMoves;
 }
 
-    isOnBoard(row, col) {
+    isOnBoard(row, col) { //verifica si la casilla esta dentro del tablero
         return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
 
-    highlightMoves(moves) {
+    highlightMoves(moves) { //higlightea los movimientos validos
         moves.forEach(move => {
             const square = move.square;
             square.classList.add('highlight');
@@ -132,7 +132,7 @@ getAllPossibleMoves(color) {
         });
     }
 
-    clearHighlights() {
+    clearHighlights() { //remueve los highlights de las casillas
         Object.values(this.board.fieldsByNum).forEach(square => {
             square.classList.remove('highlight');
             square.removeAttribute('data-capture');
