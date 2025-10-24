@@ -16,43 +16,65 @@ export default class Moves {
         });
     }
 
-    handleClick(square) {
-        const piece = square.querySelector('.checkers-piece');
+handleClick(square) {
+    const piece = square.querySelector('.checkers-piece');
 
-        // click en una pieza
-        if (piece) {
-            const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
-            if (color !== this.game.currentPlayer) return;
+    // click en una pieza
+    if (piece) {
+        const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
+        if (color !== this.game.currentPlayer) return;
 
-            this.clearHighlights();
-            this.selectedPiece = piece;
+        this.clearHighlights();
+        this.selectedPiece = piece;
 
+        // mostrar las capturas obligatorias si las hay
+        const allPieces = this.board.getPiecesByColor(this.game.currentPlayer);
+        let mandatoryCaptures = [];
+        
+        allPieces.forEach(p => {
+            const moves = this.getValidMoves(p);
+            const captures = moves.filter(m => m.capture !== null);
+            if (captures.length > 0) {
+                mandatoryCaptures.push({ piece: p, moves: captures });
+            }
+        });
+
+        // Si hay capturas obligatorias, solo muestra esas
+        if (mandatoryCaptures.length > 0) {
+            // Solo muestra los movimientos de captura para la pieza seleccionada
+            const canThisPieceCapture = mandatoryCaptures.find(m => m.piece === piece);
+            if (canThisPieceCapture) {
+                this.highlightMoves(canThisPieceCapture.moves);
+            }
+        } else {
+            // Si no hay capturas obligatorias, muestra todos los movimientos válidos
             const moves = this.getValidMoves(piece);
             this.highlightMoves(moves);
-
-        // click en una casilla válida
-        } else if (this.selectedPiece && square.classList.contains('highlight')) {
-            const captureAttr = square.getAttribute('data-capture');
-            const captureNum = captureAttr ? parseInt(captureAttr) : null;
-
-            const didCapture = this.movePiece(this.selectedPiece, square, captureNum);
-
-            this.clearHighlights();
-
-            // si comio, verificamos si puede seguir comiendo
-            if (didCapture) {
-                const nextMoves = this.getValidMoves(this.selectedPiece).filter(m => m.capture !== null);
-                if (nextMoves.length > 0) {
-                    this.highlightMoves(nextMoves);
-                    return; // no cambia turno aun
-                }
-            }
-
-            // si no hay mas capturas, termina el turno
-            this.selectedPiece = null;
-            this.game.switchTurn();
         }
+
+    // click en una casilla valida
+    } else if (this.selectedPiece && square.classList.contains('highlight')) {
+        const captureAttr = square.getAttribute('data-capture');
+        const captureNum = captureAttr ? parseInt(captureAttr) : null;
+
+        const didCapture = this.movePiece(this.selectedPiece, square, captureNum);
+
+        this.clearHighlights();
+
+        // si comio, verificamos si puede seguir comiendo
+        if (didCapture) {
+            const nextMoves = this.getValidMoves(this.selectedPiece).filter(m => m.capture !== null);
+            if (nextMoves.length > 0) {
+                this.highlightMoves(nextMoves);
+                return; // no cambia turno todavia
+            }
+        }
+
+        // si no hay mas capturas, termina el turno
+        this.selectedPiece = null;
+        this.game.switchTurn();
     }
+}
 
     getValidMoves(piece) {
     const fieldNum = parseInt(piece.parentElement.getAttribute('data-num'));
