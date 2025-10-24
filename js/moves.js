@@ -7,6 +7,7 @@ export default class Moves {
         this.game = game;
         this.selectedPiece = null;
         this.addClickEvents();
+        this.counter = 0;
     }
 
     addClickEvents() {
@@ -116,6 +117,7 @@ handleClick(square) {
                         const jumpSquare = this.board.fieldsByNum[jumpNum];
                         if (!jumpSquare.querySelector('.checkers-piece')) {
                             moves.push({ square: jumpSquare, capture: targetNum });
+                            counter++;
                         }
                     }
                 }

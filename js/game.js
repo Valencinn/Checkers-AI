@@ -17,6 +17,12 @@ class Game {
         console.log('moves inicializados'); //verificacion del setteo de moves
     }
 
+    gameDraw(){
+        this.gameStatus = 'ended';
+        this.winner = 'draw';
+        console.log('[Game] Game Over! Empate!');
+    }
+
     switchTurn() { //cambia el turno entre los jugadores
         this.currentPlayer = this.currentPlayer === 'red' ? 'blue' : 'red';
         console.log(`[Game] Ahora es el turno de: ${this.currentPlayer}`);
@@ -33,6 +39,13 @@ class Game {
             this.gameStatus = 'ended';
             this.winner = this.currentPlayer === 'red' ? 'blue' : 'red';
             console.log(`[Game] Game Over! ${this.winner} wins!`);
+            return;
+        }
+
+        //empate
+
+        if (bluePieces.length === 1 && redPieces.length === 1 || this.moves.counter>=40) {
+            this.gameDraw();
             return;
         }
     }
