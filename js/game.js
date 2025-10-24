@@ -18,7 +18,7 @@ class Game {
     }
 
     gameDraw(){
-        this.gameStatus = 'ended';
+        this.gameStatus = 'ended'; // Add this line to end the game
         this.winner = 'draw';
         console.log('[Game] Game Over! Empate!');
     }
@@ -43,7 +43,7 @@ class Game {
         }
 
         // Empate si hay 40 turnos o solo quedan 2 piezas
-        if (this.moves.counter >= 40 || (bluePieces.length === 1 && redPieces.length === 1)) {
+        if (bluePieces.length === 1 && redPieces.length === 1) {
             this.gameDraw();
             return;
         }

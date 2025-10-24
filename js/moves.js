@@ -6,7 +6,7 @@ export default class Moves {
         this.game = game;
         this.selectedPiece = null;
         this.addClickEvents();
-        this.counter = 0; // Initialize counter
+        this.counter = 0;
     }
 
     addClickEvents() {
@@ -17,6 +17,11 @@ export default class Moves {
     }
 
 handleClick(square) {
+    if (this.game.isGameEnded()) {
+        console.log('Game is ended, no more moves allowed');
+        return;
+    }
+
     const piece = square.querySelector('.checkers-piece');
 
     // click en una pieza
@@ -73,7 +78,7 @@ handleClick(square) {
         // si no hay mas capturas, termina el turno
         this.selectedPiece = null;
         this.game.switchTurn();
-        this.counter++; // Keep counter incrementing across turns
+        this.counter++; // contador de turnos
     }
 }
 
@@ -117,7 +122,6 @@ handleClick(square) {
                         const jumpSquare = this.board.fieldsByNum[jumpNum];
                         if (!jumpSquare.querySelector('.checkers-piece')) {
                             moves.push({ square: jumpSquare, capture: targetNum });
-                            this.counter++; // Use this.counter to reference the class property
                         }
                     }
                 }
