@@ -1,4 +1,3 @@
-
 import Piece from './piece.js';
 
 export default class Moves {
@@ -7,7 +6,7 @@ export default class Moves {
         this.game = game;
         this.selectedPiece = null;
         this.addClickEvents();
-        this.counter = 0;
+        this.counter = 0; // Initialize counter
     }
 
     addClickEvents() {
@@ -74,6 +73,7 @@ handleClick(square) {
         // si no hay mas capturas, termina el turno
         this.selectedPiece = null;
         this.game.switchTurn();
+        this.counter++; // Keep counter incrementing across turns
     }
 }
 
@@ -117,7 +117,7 @@ handleClick(square) {
                         const jumpSquare = this.board.fieldsByNum[jumpNum];
                         if (!jumpSquare.querySelector('.checkers-piece')) {
                             moves.push({ square: jumpSquare, capture: targetNum });
-                            counter++;
+                            this.counter++; // Use this.counter to reference the class property
                         }
                     }
                 }

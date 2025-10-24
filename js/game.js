@@ -34,7 +34,7 @@ class Game {
         const bluePieces = this.board.getPiecesByColor('blue');
         const redPieces = this.board.getPiecesByColor('red');
 
-        // checkea si el jugador actual no tiene movimientos posibles, no hace falta verificar las piezas ya que se queda sin piezas tambien se queda sin movimientos!
+        // checkea si el jugador actual no tiene movimientos posibles
         if (possibleMoves.length === 0) {
             this.gameStatus = 'ended';
             this.winner = this.currentPlayer === 'red' ? 'blue' : 'red';
@@ -42,9 +42,8 @@ class Game {
             return;
         }
 
-        //empate
-
-        if (bluePieces.length === 1 && redPieces.length === 1 || this.moves.counter>=40) {
+        // Empate si hay 40 turnos o solo quedan 2 piezas
+        if (this.moves.counter >= 40 || (bluePieces.length === 1 && redPieces.length === 1)) {
             this.gameDraw();
             return;
         }
