@@ -102,7 +102,6 @@ class Board {
             }
         boardArr.push(rowArr);
         }
-    console.table(boardArr); //.table muestra el array en forma de tabla en la consola
     return boardArr;
     }
 }

@@ -12,6 +12,8 @@ class Game {
         this.board = new Board();
         this.board.appendTo(this.container);
         this.board.fillWithPieces();
+        this.board.boardArray = this.board.boardArray();
+        console.table('[Game] Tablero a modo matriz:', this.board.boardArray);
 
         this.moves = new Moves(this.board, this);
         console.log('moves inicializados'); //verificacion del setteo de moves
