@@ -77,23 +77,33 @@ class Board {
         container.appendChild(this.el);
     }
 
-    boardArray(){
+    boardArray() {
         const boardArr = [];
 
-        for (let row = 0; row < 8; row += 1) {
-            const rowArr = [];
-            for (let col = 0; col < 8; col += 1) {
-                const num = row * 8 + col;
-                const square = this.fieldsByNum[num];
-                const piece = square.querySelector('.checkers-piece');
-                
+    for (let row = 0; row < 8; row += 1) {
+        const rowArr = [];
+
+        for (let col = 0; col < 8; col += 1) {
+            const num = row * 8 + col;
+            const square = this.fieldsByNum[num];
+            const piece = square.querySelector('.checkers-piece');
 
                 if (!piece) {
-                    rowArr.push(0); //0 = casilla vacia
+                rowArr.push(0); //0 = casilla vacia
+                } else if (piece.classList.contains('checkers-piece-red') && piece.classList.contains('king')) {
+                rowArr.push(2); //2 = rey rojo (IA)
+                } else if (piece.classList.contains('checkers-piece-blue') && piece.classList.contains('king')) {
+                rowArr.push(-2); //-2 = rey azul (PLAYER)
                 } else if (piece.classList.contains('checkers-piece-red')) {
-                    rowArr.push(1); //1 = pieza roja (IA)
+                rowArr.push(1); //1 = pieza roja (IA)
                 } else if (piece.classList.contains('checkers-piece-blue')) {
-                    rowArr.push(-1); //-1 = pieza azul (PLAYER)
+                rowArr.push(-1); //-1 = pieza azul (PLAYER)
+                }
+            }
+        boardArr.push(rowArr);
+        }
+    console.table(boardArr); //.table muestra el array en forma de tabla en la consola
+    return boardArr;
     }
 }
 
