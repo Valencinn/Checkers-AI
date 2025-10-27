@@ -76,6 +76,25 @@ class Board {
     appendTo(container) {
         container.appendChild(this.el);
     }
+
+    boardArray(){
+        const boardArr = [];
+
+        for (let row = 0; row < 8; row += 1) {
+            const rowArr = [];
+            for (let col = 0; col < 8; col += 1) {
+                const num = row * 8 + col;
+                const square = this.fieldsByNum[num];
+                const piece = square.querySelector('.checkers-piece');
+                
+
+                if (!piece) {
+                    rowArr.push(0); //0 = casilla vacia
+                } else if (piece.classList.contains('checkers-piece-red')) {
+                    rowArr.push(1); //1 = pieza roja (IA)
+                } else if (piece.classList.contains('checkers-piece-blue')) {
+                    rowArr.push(-1); //-1 = pieza azul (PLAYER)
+    }
 }
 
 export default Board;
