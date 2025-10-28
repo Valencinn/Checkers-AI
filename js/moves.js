@@ -16,7 +16,7 @@ export default class Moves {
         });
     }
 
-handleClick(square) {
+    handleClick(square) {
     if (this.game.isGameEnded()) {
         console.log('Game is ended, no more moves allowed');
         return;
@@ -132,7 +132,7 @@ handleClick(square) {
     return moves;
 }
 
-getAllPossibleMoves(color) { // obtiene todos los movimientos posibles para un color dado
+    getAllPossibleMoves(color) { // obtiene todos los movimientos posibles para un color dado
     const pieces = this.board.getPiecesByColor(color);
     let allMoves = [];
 
