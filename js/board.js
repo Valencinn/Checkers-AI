@@ -27,7 +27,7 @@ class Board {
 
         const dark = Boolean((row + col) % 2); //para que se alternen los colores
         if (dark) {
-            el.className += 'dark-square'; 
+            el.className += 'dark-square';
         } else {
             el.className += 'light-square';
         }
@@ -43,8 +43,8 @@ class Board {
     //llena el tablero con piezas
     fillWithPieces() {
 
-        for (let i = 0; i < 3; i+=1) { //para las rojas
-            for (let j = 0; j < 4; j+= 1) {
+        for (let i = 0; i < 3; i += 1) { //para las rojas
+            for (let j = 0; j < 4; j += 1) {
                 let piece = new Piece("red");
                 const field = this.fieldsByNum[i * 8 + (j * 2) + ((i + 1) % 2)]; // el calculo es: fila * 8 + (columna * 2) + ((fila + 1) % 2).
                 piece.setField(field);
@@ -52,8 +52,8 @@ class Board {
             }
         }
 
-        for (let i = 5; i < 8; i+=1) { //para las negras/azules 
-            for (let j = 0; j < 4; j+= 1) {
+        for (let i = 5; i < 8; i += 1) { //para las negras/azules 
+            for (let j = 0; j < 4; j += 1) {
                 let piece = new Piece("blue");
                 const field = this.fieldsByNum[i * 8 + (j * 2) + ((i + 1) % 2)];
                 piece.setField(field);
@@ -72,6 +72,8 @@ class Board {
         return pieces;
     }
 
+    getPossibleMoves(color) { } //futuro metodo para obtener todos los movimientos posibles de un color (esto se va a usar para despues en el minimax)
+
     //mete el tablero en el contenedor
     appendTo(container) {
         container.appendChild(this.el);
@@ -80,29 +82,29 @@ class Board {
     boardArray() {
         const boardArr = [];
 
-    for (let row = 0; row < 8; row += 1) {
-        const rowArr = [];
+        for (let row = 0; row < 8; row += 1) {
+            const rowArr = [];
 
-        for (let col = 0; col < 8; col += 1) {
-            const num = row * 8 + col;
-            const square = this.fieldsByNum[num];
-            const piece = square.querySelector('.checkers-piece');
+            for (let col = 0; col < 8; col += 1) {
+                const num = row * 8 + col;
+                const square = this.fieldsByNum[num];
+                const piece = square.querySelector('.checkers-piece');
 
                 if (!piece) {
-                rowArr.push(0); //0 = casilla vacia
+                    rowArr.push(0); //0 = casilla vacia
                 } else if (piece.classList.contains('checkers-piece-red') && piece.classList.contains('king')) {
-                rowArr.push(2); //2 = rey rojo (IA)
+                    rowArr.push(2); //2 = rey rojo (IA)
                 } else if (piece.classList.contains('checkers-piece-blue') && piece.classList.contains('king')) {
-                rowArr.push(-2); //-2 = rey azul (PLAYER)
+                    rowArr.push(-2); //-2 = rey azul (PLAYER)
                 } else if (piece.classList.contains('checkers-piece-red')) {
-                rowArr.push(1); //1 = pieza roja (IA)
+                    rowArr.push(1); //1 = pieza roja (IA)
                 } else if (piece.classList.contains('checkers-piece-blue')) {
-                rowArr.push(-1); //-1 = pieza azul (PLAYER)
+                    rowArr.push(-1); //-1 = pieza azul (PLAYER)
                 }
             }
-        boardArr.push(rowArr);
+            boardArr.push(rowArr);
         }
-    return boardArr;
+        return boardArr;
     }
 }
 

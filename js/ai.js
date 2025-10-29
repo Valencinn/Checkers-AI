@@ -36,7 +36,6 @@ class AIEngine {
 
         if (maxPlayer) {
             let maxEval = -Infinity;
-
         } else {
             let minEval = Infinity;
         }
