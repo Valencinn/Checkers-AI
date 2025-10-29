@@ -31,7 +31,7 @@ class AIEngine {
 
         //caso terminal base: juego terminado.
         if (depth === 0) {
-            return this.evaluateBoard(boardArray); // evaluateBoard también debe leer el array
+            return this.evaluateBoard(boardArray); // evaluateBoard debe leer el array
         }
 
         if (maxPlayer) { //maxPlayer es la IA (busca maximizar)
@@ -46,8 +46,8 @@ class AIEngine {
                 const newBoardArray = applyMoveToArray(boardArray, move);
 
                 //la recursividad es clave en minimax porque al llamarse a si mismo permite explorar todas las posibles secuencias de movimientos futuros
-                let recEval = this.minimax(newBoardArray, depth - 1, false); //false = turno minPlayer. Depth -1 es porque ya se hizo un movimiento entonces se reduce la profundidad de busqueda
-                maxEval = Math.max(maxEval, recEval); //en el caso que recEval sea mayor que maxEval, actualizamos maxEval asi determinando que esa jugada es mejor que la anterior
+                let evaluation = this.minimax(newBoardArray, depth - 1, false); //false = turno minPlayer. Depth -1 es porque ya se hizo un movimiento entonces se reduce la profundidad de busqueda
+                maxEval = Math.max(maxEval, evaluation); //en el caso que recEval sea mayor que maxEval, actualizamos maxEval asi determinando que esa jugada es mejor que la anterior
             }
             return maxEval;
 
@@ -62,15 +62,19 @@ class AIEngine {
                 //aca es donde simula el movimiento del jugador humano asi la IA puede evaluar las posibles respuestas
                 const newBoardArray = applyMoveToArray(boardArray, move);
 
-                let recEval = this.minimax(newBoardArray, depth - 1, true); //true = turno maxPlayer
-                minEval = Math.min(minEval, recEval);
+                let evaluation = this.minimax(newBoardArray, depth - 1, true); //true = turno maxPlayer
+                minEval = Math.min(minEval, evaluation);
             }
             return minEval;
         }
     }
 
-    evaluateBoard() {
-
+    evaluateBoard(boardArray) {//calculo facil que hace la suma y resta de las piezas en el tablero asi dandole X valor a los dos jugadores
+        let score = 0;
+        for (let row of boardArray) {
+            for (let cell of row) score += cell;
+        }
+        return score;
     };
 
     getValidMovesForArray(boardArray, color) { };
