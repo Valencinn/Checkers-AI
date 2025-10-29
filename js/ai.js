@@ -27,6 +27,30 @@ class AIEngine {
         }
     }
 
+    evaluateBoard(boardArray) {//calculo facil que hace la suma y resta de las piezas en el tablero asi dandole X valor a los dos jugadores
+        let score = 0;
+        for (let row of boardArray) {
+            for (let cell of row) score += cell;
+        }
+        return score;
+    };
+
+    isTerminalState(boardArray) {
+        //verifica si el juego ha llegado a estado terminal
+        let reds = 0;
+        let blues = 0;
+        for (let row of boardArray) {
+            for (let cell of row) {
+                if (cell > 0) reds++;
+                else if (cell < 0) blues++;
+            }
+            if (reds === 0 || blues === 0) {
+                console.log("[AI] Terminal state reached, game ended")
+                return true;
+            }
+        }
+    }
+
     minimax(boardArray, depth, maxPlayer) {
 
         //caso terminal base: juego terminado.
@@ -68,14 +92,6 @@ class AIEngine {
             return minEval;
         }
     }
-
-    evaluateBoard(boardArray) {//calculo facil que hace la suma y resta de las piezas en el tablero asi dandole X valor a los dos jugadores
-        let score = 0;
-        for (let row of boardArray) {
-            for (let cell of row) score += cell;
-        }
-        return score;
-    };
 
     getValidMovesForArray(boardArray, color) { };
 
