@@ -27,18 +27,56 @@ class AIEngine {
         }
     }
 
-    minimax(board, depth, maxPlayer) {
+    minimax(boardArray, depth, maxPlayer) {
 
-        //caso base en el que llegamos a la profunidad maxima o a un estado terminal (gameStatus = ended en game.js)
-        if (depth === 0 || board.isGameOver()) {
-            return this.evaluateBoard(board);
+        //caso terminal base: juego terminado.
+        if (depth === 0) {
+            return this.evaluateBoard(boardArray); // evaluateBoard también debe leer el array
         }
 
-        if (maxPlayer) {
+        if (maxPlayer) { //maxPlayer es la IA (busca maximizar)
             let maxEval = -Infinity;
-        } else {
-            let minEval = Infinity;
-        }
 
+            //buscamos los movimientos posibles para el maxPlayer que es la IA (por eso rojo)
+            const allMoves = getValidMovesForArray(boardArray, 'red');
+
+            for (const move of allMoves) {
+
+                //con este forof simula el movimiento de la IA
+                const newBoardArray = applyMoveToArray(boardArray, move);
+
+                //la recursividad es clave en minimax porque al llamarse a si mismo permite explorar todas las posibles secuencias de movimientos futuros
+                let recEval = this.minimax(newBoardArray, depth - 1, false); //false = turno minPlayer. Depth -1 es porque ya se hizo un movimiento entonces se reduce la profundidad de busqueda
+                maxEval = Math.max(maxEval, recEval); //en el caso que recEval sea mayor que maxEval, actualizamos maxEval asi determinando que esa jugada es mejor que la anterior
+            }
+            return maxEval;
+
+        } else { //minPlayer es el jugador humano (busca minimizar). Porque se hace esto? porque el jugador humano va a mover entonces la IA tiene que buscar cual seria el movimiento que haria si estuviese en su lugar
+            let minEval = Infinity;
+
+            //en este caso allMoves son los movimientos pero del jugador humano
+            const allMoves = getValidMovesForArray(boardArray, 'blue');
+
+            for (const move of allMoves) {
+
+                //aca es donde simula el movimiento del jugador humano asi la IA puede evaluar las posibles respuestas
+                const newBoardArray = applyMoveToArray(boardArray, move);
+
+                let recEval = this.minimax(newBoardArray, depth - 1, true); //true = turno maxPlayer
+                minEval = Math.min(minEval, recEval);
+            }
+            return minEval;
+        }
     }
-} 
+
+    evaluateBoard() {
+
+    };
+
+    getValidMovesForArray(boardArray, color) { };
+
+    applyMoveToArray(boardArray, move) { };
+
+}
+
+export default AIEngine;

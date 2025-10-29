@@ -12,14 +12,14 @@ class Game {
         this.board = new Board();
         this.board.appendTo(this.container);
         this.board.fillWithPieces();
-        this.board.boardArray = this.board.boardArray();
-        console.table('[Game] Tablero a modo matriz:', this.board.boardArray);
+        const currentBoard = this.board.boardArray();
+        console.table('[Game] Tablero a modo matriz:', currentBoard);
 
         this.moves = new Moves(this.board, this);
         console.log('moves inicializados'); //verificacion del setteo de moves
     }
 
-    gameDraw(){
+    gameDraw() {
         this.gameStatus = 'ended'; // Add this line to end the game
         this.winner = 'draw';
         console.log('[Game] Game Over! Empate!');

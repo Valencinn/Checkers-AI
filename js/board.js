@@ -72,8 +72,6 @@ class Board {
         return pieces;
     }
 
-    getPossibleMoves(color) { } //futuro metodo para obtener todos los movimientos posibles de un color (esto se va a usar para despues en el minimax)
-
     //mete el tablero en el contenedor
     appendTo(container) {
         container.appendChild(this.el);
