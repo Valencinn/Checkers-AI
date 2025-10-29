@@ -1,5 +1,6 @@
 import Board from './board.js';
 import Moves from './moves.js';
+import AIEngine from './ai.js';
 
 class Game {
     constructor(container) {
@@ -12,8 +13,8 @@ class Game {
         this.board = new Board();
         this.board.appendTo(this.container);
         this.board.fillWithPieces();
-        const currentBoard = this.board.boardArray();
-        console.table('[Game] Tablero a modo matriz:', currentBoard);
+        const currentPosition = this.board.boardArray();
+        console.table('[Game] Tablero a modo matriz:', currentPosition);
 
         this.moves = new Moves(this.board, this);
         console.log('moves inicializados'); //verificacion del setteo de moves

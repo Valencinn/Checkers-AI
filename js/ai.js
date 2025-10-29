@@ -51,9 +51,13 @@ class AIEngine {
         }
     }
 
-    getValidMovesForArray(boardArray, color) { };
+    getValidMovesForArray(boardArray, color) {
+        //aca voy a hacer que a traves de la currentPosition me devuelva los movimientos validos para el color rojo aka la IA
+    };
 
-    applyMoveToArray(boardArray, move) { };
+    applyMoveToArray(boardArray, move) {
+        //simula el movimiento en el array del tablero
+    };
 
     minimax(boardArray, depth, maxPlayer) {
 
