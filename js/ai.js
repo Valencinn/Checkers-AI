@@ -51,6 +51,10 @@ class AIEngine {
         }
     }
 
+    getValidMovesForArray(boardArray, color) { };
+
+    applyMoveToArray(boardArray, move) { };
+
     minimax(boardArray, depth, maxPlayer) {
 
         //caso terminal base: juego terminado.
@@ -92,10 +96,6 @@ class AIEngine {
             return minEval;
         }
     }
-
-    getValidMovesForArray(boardArray, color) { };
-
-    applyMoveToArray(boardArray, move) { };
 
 }
 
