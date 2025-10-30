@@ -98,3 +98,15 @@ body {
     border: 2px solid gold;
     box-shadow: 0 0 10px gold;
 }
+
+#preloader{
+    background: #1b1941 url(./assets/loader.gif) no-repeat center center;
+    background-size: 70px;
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: none; /* Hide by default */
+}

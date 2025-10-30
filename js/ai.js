@@ -46,7 +46,7 @@ class AIEngine {
             }
             if (reds === 0 || blues === 0) {
                 console.log("[AI] Terminal state reached, game ended")
-                return true;
+                return true; 
             }
         }
     }
