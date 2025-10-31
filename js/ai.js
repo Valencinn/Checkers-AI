@@ -59,14 +59,14 @@ class AIEngine {
         //aca voy a hacer que a traves de la currentPosition me devuelva los movimientos validos para el color rojo aka la IA
         const moves = [];
         const playerPieces = (color === 'red') ? [1, 2] : [-1, -2];
-        const direction = (color === 'red') ? 1 : -1; // red moves down, blue moves up
+        const direction = (color === 'red') ? 1 : -1; //las direcciones!
 
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
                 const piece = boardArray[row][col];
                 if (!playerPieces.includes(piece)) continue;
 
-                const isKing = Math.abs(piece) === 2;
+                const isKing = Math.abs(piece) === 2; //.abs checkea si es rey, funciona porque los reyes son 2 y -2 y abs lo que hace es devolver el valor positivo siempre
                 const directions = [];
 
                 if (isKing) {
@@ -79,7 +79,7 @@ class AIEngine {
                     const newRow = row + dr;
                     const newCol = col + dc;
 
-                    // Normal move
+                    //movimiento base (usa push xq es un array! acordate!)
                     if (this.isOnBoard(newRow, newCol) && boardArray[newRow][newCol] === 0) {
                         moves.push({
                             from: [row, col],
@@ -88,13 +88,13 @@ class AIEngine {
                         });
                     }
 
-                    // Capture move
+                    //captura
                     const jumpRow = row + dr * 2;
                     const jumpCol = col + dc * 2;
-                    if (this.isOnBoard(jumpRow, jumpCol) && boardArray[jumpRow][jumpCol] === 0) {
-                        const midPiece = boardArray[row + dr][col + dc];
-                        if (midPiece !== 0 && Math.sign(midPiece) !== Math.sign(piece)) {
-                            moves.push({
+                    if (this.isOnBoard(jumpRow, jumpCol) && boardArray[jumpRow][jumpCol] === 0) { //si tiene la opcion de comer
+                        const midPiece = boardArray[row + dr][col + dc]; //y existe la pieza ady en el medio
+                        if (midPiece !== 0 && Math.sign(midPiece) !== Math.sign(piece)) { //sign devuelve el signo de un numero, si es distinto es porque es del oponente
+                            moves.push({ //si es asi que haga el movimiento de captura
                                 from: [row, col],
                                 to: [jumpRow, jumpCol],
                                 capture: [row + dr, col + dc]
@@ -109,14 +109,14 @@ class AIEngine {
     };
 
     applyMoveToArray(boardArray, move) {
-        const newBoard = boardArray.map(row => [...row]);
-        const { from, to, capture } = move;
+        const newBoard = boardArray.map(row => [...row]); //que significa esto? crea una copia del array asi no modifica el original hasta que se haga el movimiento
+        const { from, to, capture } = move; //extrae las coordenadas de from, to y capture del objeto move
 
-        const piece = newBoard[from[0]][from[1]];
-        newBoard[from[0]][from[1]] = 0;
-        newBoard[to[0]][to[1]] = piece;
+        const piece = newBoard[from[0]][from[1]]; //obtiene la pieza que se va a mover
+        newBoard[from[0]][from[1]] = 0; //vacia la casilla de origen
+        newBoard[to[0]][to[1]] = piece; //coloca la pieza en la casilla de destino
 
-        if (capture) newBoard[capture[0]][capture[1]] = 0;
+        if (capture) newBoard[capture[0]][capture[1]] = 0; //si hay pieza capturada que pase el array a 0 (vacia la casilla)
 
         return newBoard;
     }
@@ -138,7 +138,6 @@ class AIEngine {
                 //simula el movimiento
                 const newBoardArray = this.applyMoveToArray(boardArray, move);
 
-                //recursión
                 const evaluation = this.minimax(newBoardArray, depth - 1, false);
                 maxEval = Math.max(maxEval, evaluation);
             }
@@ -154,12 +153,31 @@ class AIEngine {
                 //esto simula el movimiento
                 const newBoardArray = this.applyMoveToArray(boardArray, move);
 
-                const evaluation = this.minimax(newBoardArray, depth - 1, true);
+                const evaluation = this.minimax(newBoardArray, depth - 1, true);//no me tomaba la palabra eval creo que funciona como keyword?
                 minEval = Math.min(minEval, evaluation);
             }
             return minEval;
         }
     }
+
+    getBestMove(boardArray, depth = 3) { //devuelve el mejor movimiento posible para la IA usando minimax que creamos antes
+    const allMoves = this.getValidMovesForArray(boardArray, 'red'); //le pasamos los movimientos posibles con la funcion anterior
+    let bestMove = null; //ponemos esto hasta que defina cual es el mejor movimiento
+    let bestValue = -Infinity; //igual a minimax (esto es para maximizar)
+
+    for (const move of allMoves) {
+        const newBoard = this.applyMoveToArray(boardArray, move); //simulamos el movimiento
+        const evalValue = this.minimax(newBoard, depth - 1, false); //llamamos a minimax para evaluar el movimiento
+
+        if (evalValue > bestValue) {
+            bestValue = evalValue; //si el eval es mejor que el best actual decide que el eval = best
+            bestMove = move;
+        }
+    }
+
+    console.log("[AI] Mejor movimiento:", bestMove, "Score:", bestValue); //log para ver cual es e mejor movimiento
+    return bestMove;
+}
 }
 
 export default AIEngine;

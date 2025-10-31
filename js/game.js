@@ -1,5 +1,6 @@
 import Board from './board.js';
 import Moves from './moves.js';
+import AIEngine from './ai.js';
 
 class Game {
     constructor(container) {
@@ -34,6 +35,43 @@ class Game {
             setTimeout(() => this.playAITurn(), 500);
         }
     }
+
+    playAITurn() { //este es el manejo de la IA
+        const ai = new AIEngine();
+        const boardArray = this.board.boardArray();
+        const bestMove = ai.getBestMove(boardArray, 3);
+
+        if (!bestMove) {
+            console.log('[AI] No hay movimientos disponibles');
+            this.checkGameStatus();
+            return;
+        }
+
+    //que hace esto? convierte el tablero virtual que estaba muy atado al DOM a coordenadas asi la IA puede mover las piezas en el mismo
+        const [fromRow, fromCol] = bestMove.from; //coordenadas de origen
+        const [toRow, toCol] = bestMove.to; //coordenadas de destino
+        const fromNum = fromRow * 8 + fromCol; //convertir coordenadas a numero de casilla
+        const toNum = toRow * 8 + toCol;
+
+        const fromSquare = this.board.fieldsByNum[fromNum]; //casilla de origen
+        const toSquare = this.board.fieldsByNum[toNum]; //casilla de destino
+        const piece = fromSquare.querySelector('.checkers-piece-red'); //red porque la IA es roja
+
+        if (piece) { //este if es para verificar que la pieza exista en la casilla de origen antes de moverla, sino me tira error (no se xq)
+            fromSquare.removeChild(piece);
+            toSquare.appendChild(piece);
+            if (bestMove.capture) { //si la mejor opcion fue capturar una pieza
+                const [cr, cc] = bestMove.capture;
+                const captureNum = cr * 8 + cc; //convertir coordenadas de captura a numero de casilla
+                const captured = this.board.fieldsByNum[captureNum].querySelector('.checkers-piece');
+                if (captured) captured.remove();
+            }
+        }
+
+    console.log('[AI] Movimiento completado:', bestMove);
+    this.switchTurn();
+}
+
 
     checkGameStatus() {
         const possibleMoves = this.moves.getAllPossibleMoves(this.currentPlayer);
