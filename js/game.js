@@ -1,6 +1,5 @@
 import Board from './board.js';
 import Moves from './moves.js';
-import AIEngine from './ai.js';
 
 class Game {
     constructor(container) {
@@ -30,6 +29,10 @@ class Game {
         this.currentPlayer = this.currentPlayer === 'red' ? 'blue' : 'red';
         console.log(`[Game] Ahora es el turno de: ${this.currentPlayer}`);
         this.checkGameStatus();
+
+        if (this.currentPlayer === 'red' && !this.isGameEnded()) {
+            setTimeout(() => this.playAITurn(), 500);
+        }
     }
 
     checkGameStatus() {
