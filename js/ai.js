@@ -56,17 +56,17 @@ class AIEngine {
     }
 
     getValidMovesForArray(boardArray, color) {
-        //aca voy a hacer que a traves de la currentPosition me devuelva los movimientos validos para el color rojo aka la IA
-        const moves = [];
-        const playerPieces = (color === 'red') ? [1, 2] : [-1, -2];
-        const direction = (color === 'red') ? 1 : -1; //las direcciones!
+        const moves = []; //array para registrar los movimientos
+        const captures = []; //array para registrar las capturas
+        const playerPieces = (color === 'red') ? [1, 2] : [-1, -2]; //definir las piezas del jugador
+        const direction = (color === 'red') ? 1 : -1;
 
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
                 const piece = boardArray[row][col];
                 if (!playerPieces.includes(piece)) continue;
 
-                const isKing = Math.abs(piece) === 2; //.abs checkea si es rey, funciona porque los reyes son 2 y -2 y abs lo que hace es devolver el valor positivo siempre
+                const isKing = Math.abs(piece) === 2;
                 const directions = [];
 
                 if (isKing) {
@@ -79,7 +79,22 @@ class AIEngine {
                     const newRow = row + dr;
                     const newCol = col + dc;
 
-                    //movimiento base (usa push xq es un array! acordate!)
+                    //captura
+                    const jumpRow = row + dr * 2;
+                    const jumpCol = col + dc * 2;
+                    if (this.isOnBoard(jumpRow, jumpCol) && boardArray[jumpRow][jumpCol] === 0) {
+                        const midPiece = boardArray[row + dr][col + dc];
+                        if (midPiece !== 0 && Math.sign(midPiece) !== Math.sign(piece)) { //math.sign devuelve el signo asi sabiendo si es enemigo o no
+                            //encontrada una captura
+                            captures.push({
+                                from: [row, col],
+                                to: [jumpRow, jumpCol],
+                                capture: [row + dr, col + dc]
+                            });
+                        }
+                    }
+
+                    //movimiento base (en el caso de si no es captura)
                     if (this.isOnBoard(newRow, newCol) && boardArray[newRow][newCol] === 0) {
                         moves.push({
                             from: [row, col],
@@ -87,25 +102,11 @@ class AIEngine {
                             capture: null
                         });
                     }
-
-                    //captura
-                    const jumpRow = row + dr * 2;
-                    const jumpCol = col + dc * 2;
-                    if (this.isOnBoard(jumpRow, jumpCol) && boardArray[jumpRow][jumpCol] === 0) { //si tiene la opcion de comer
-                        const midPiece = boardArray[row + dr][col + dc]; //y existe la pieza ady en el medio
-                        if (midPiece !== 0 && Math.sign(midPiece) !== Math.sign(piece)) { //sign devuelve el signo de un numero, si es distinto es porque es del oponente
-                            moves.push({ //si es asi que haga el movimiento de captura
-                                from: [row, col],
-                                to: [jumpRow, jumpCol],
-                                capture: [row + dr, col + dc]
-                            });
-                        }
-                    }
                 }
             }
         }
 
-        return moves;
+        return captures.length > 0 ? captures : moves; //si hay capturas, son obligatorias!
     };
 
     applyMoveToArray(boardArray, move) {
@@ -161,23 +162,23 @@ class AIEngine {
     }
 
     getBestMove(boardArray, depth = 3) { //devuelve el mejor movimiento posible para la IA usando minimax que creamos antes
-    const allMoves = this.getValidMovesForArray(boardArray, 'red'); //le pasamos los movimientos posibles con la funcion anterior
-    let bestMove = null; //ponemos esto hasta que defina cual es el mejor movimiento
-    let bestValue = -Infinity; //igual a minimax (esto es para maximizar)
+        const allMoves = this.getValidMovesForArray(boardArray, 'red'); //le pasamos los movimientos posibles con la funcion anterior
+        let bestMove = null; //ponemos esto hasta que defina cual es el mejor movimiento
+        let bestValue = -Infinity; //igual a minimax (esto es para maximizar)
 
-    for (const move of allMoves) {
-        const newBoard = this.applyMoveToArray(boardArray, move); //simulamos el movimiento
-        const evalValue = this.minimax(newBoard, depth - 1, false); //llamamos a minimax para evaluar el movimiento
+        for (const move of allMoves) {
+            const newBoard = this.applyMoveToArray(boardArray, move); //simulamos el movimiento
+            const evalValue = this.minimax(newBoard, depth - 1, false); //llamamos a minimax para evaluar el movimiento
 
-        if (evalValue > bestValue) {
-            bestValue = evalValue; //si el eval es mejor que el best actual decide que el eval = best
-            bestMove = move;
+            if (evalValue > bestValue) {
+                bestValue = evalValue; //si el eval es mejor que el best actual decide que el eval = best
+                bestMove = move;
+            }
         }
-    }
 
-    console.log("[AI] Mejor movimiento:", bestMove, "Score:", bestValue); //log para ver cual es e mejor movimiento
-    return bestMove;
-}
+        console.log("[AI] Mejor movimiento:", bestMove, "Score:", bestValue); //log para ver cual es e mejor movimiento
+        return bestMove;
+    }
 }
 
 export default AIEngine;
