@@ -55,6 +55,83 @@ class AIEngine {
         return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
 
+    //cloneBoard crea una copia del boardArray asi no modifica el original y puede simular movimientos
+    cloneBoard(boardArray) {
+        return boardArray.map(r => [...r]);
+    }
+
+    /* 
+    DFS: dfs (depth-first search) es un algoritmo de busqueda utilizado para recorrer o buscar en estructuras de datos como arboles o grafos.
+    El algoritmo comienza en un nodo raiz y explora tan lejos como sea posible a lo largo de cada rama antes de retroceder.
+    porque lo uso aca? para encontrar todas las secuencias de captura posibles para una pieza en particular.
+    sino habia que hacer un calculo gigante para encontrar todas las capturas multiples posibles y encima no comia obligatoriamente porque se rompia ya que 
+    podria haber varias opciones de captura en diferentes direcciones.
+    */
+    findCaptureSequences(boardArray, row, col) {
+        const piece = boardArray[row][col];
+        const isKing = Math.abs(piece) === 2;
+        const colorSign = Math.sign(piece);
+        const directions = [];
+
+        if (isKing) {
+            directions.push([1, -1], [1, 1], [-1, -1], [-1, 1]);
+        } else if (colorSign > 0) { //rojo (IA)
+            directions.push([1, -1], [1, 1]);
+        } else { //azul (jugador)
+            directions.push([-1, -1], [-1, 1]);
+        }
+
+        const sequences = []; //array para guardar las secuencias de captura encontradas
+
+        for (const [dr, dc] of directions) { //para cada direccion posible
+            const midR = row + dr;
+            const midC = col + dc;
+            const landR = row + dr * 2;
+            const landC = col + dc * 2;
+
+            if (!this.isOnBoard(midR, midC) || !this.isOnBoard(landR, landC)) continue; //continue significa que saltea a la siguiente iteracion del loop asi skipea el codigo de abajo en el caso que no se cumpla la condicion
+
+            const midPiece = boardArray[midR][midC];
+            const landPiece = boardArray[landR][landC];
+
+            if (midPiece !== 0 && Math.sign(midPiece) !== Math.sign(piece) && landPiece === 0) {
+                //posible salto
+                const copy = this.cloneBoard(boardArray);
+                copy[row][col] = 0;
+                copy[midR][midC] = 0;
+
+                //esta es la coronacion durante secuencia si llega a fila final
+                let movedPiece = piece;
+                if (Math.abs(piece) === 1) {
+                    if (colorSign > 0 && landR === 7) movedPiece = 2; //rojo corona
+                    if (colorSign < 0 && landR === 0) movedPiece = -2; //azul corona
+                }
+
+                copy[landR][landC] = movedPiece;
+
+                const recCall = this.findCaptureSequences(copy, landR, landC);
+
+                if (recCall.length === 0) {
+                    sequences.push({
+                        from: [row, col],
+                        to: [landR, landC],
+                        captures: [[midR, midC]]
+                    });
+                } else {
+                    for (const seq of recCall) {
+                        sequences.push({
+                            from: [row, col],
+                            to: seq.to,
+                            captures: [[midR, midC], ...seq.captures]
+                        });
+                    }
+                }
+            }
+        }
+
+        return sequences;
+    }
+
     getValidMovesForArray(boardArray, color) {
         const moves = []; //array para registrar los movimientos
         const captures = []; //array para registrar las capturas
@@ -65,6 +142,13 @@ class AIEngine {
             for (let col = 0; col < 8; col++) {
                 const piece = boardArray[row][col];
                 if (!playerPieces.includes(piece)) continue;
+
+                //DFS para encontrar secuencias de captura
+                const seqs = this.findCaptureSequences(boardArray, row, col);
+                if (seqs.length > 0) {
+                    seqs.forEach(s => captures.push(s));
+                    continue;
+                }
 
                 const isKing = Math.abs(piece) === 2;
                 const directions = [];
@@ -79,27 +163,11 @@ class AIEngine {
                     const newRow = row + dr;
                     const newCol = col + dc;
 
-                    //captura
-                    const jumpRow = row + dr * 2;
-                    const jumpCol = col + dc * 2;
-                    if (this.isOnBoard(jumpRow, jumpCol) && boardArray[jumpRow][jumpCol] === 0) {
-                        const midPiece = boardArray[row + dr][col + dc];
-                        if (midPiece !== 0 && Math.sign(midPiece) !== Math.sign(piece)) { //math.sign devuelve el signo asi sabiendo si es enemigo o no
-                            //encontrada una captura
-                            captures.push({
-                                from: [row, col],
-                                to: [jumpRow, jumpCol],
-                                capture: [row + dr, col + dc]
-                            });
-                        }
-                    }
-
-                    //movimiento base (en el caso de si no es captura)
                     if (this.isOnBoard(newRow, newCol) && boardArray[newRow][newCol] === 0) {
                         moves.push({
                             from: [row, col],
                             to: [newRow, newCol],
-                            capture: null
+                            captures: []
                         });
                     }
                 }
@@ -110,15 +178,26 @@ class AIEngine {
     };
 
     applyMoveToArray(boardArray, move) {
-        const newBoard = boardArray.map(row => [...row]); //que significa esto? crea una copia del array asi no modifica el original hasta que se haga el movimiento
-        const { from, to, capture } = move; //extrae las coordenadas de from, to y capture del objeto move
+        const newBoard = boardArray.map(row => [...row]); //creamos una copia del array asi no modifica el original hasta que se haga el movimiento
+        const { from, to, captures } = move; //desestructura el movimiento en las coordenadas de origen, destino y captura
 
         const piece = newBoard[from[0]][from[1]]; //obtiene la pieza que se va a mover
         newBoard[from[0]][from[1]] = 0; //vacia la casilla de origen
-        newBoard[to[0]][to[1]] = piece; //coloca la pieza en la casilla de destino
 
-        if (capture) newBoard[capture[0]][capture[1]] = 0; //si hay pieza capturada que pase el array a 0 (vacia la casilla)
+        if (captures && captures.length > 0) {
+            for (const [cr, cc] of captures) {
+                newBoard[cr][cc] = 0;
+            }
+        }
 
+        let newPiece = piece;
+
+        if (Math.abs(piece) === 1) {
+            if (piece > 0 && to[0] === 7) newPiece = 2;
+            if (piece < 0 && to[0] === 0) newPiece = -2;
+        }
+
+        newBoard[to[0]][to[1]] = newPiece;
         return newBoard;
     }
 
@@ -154,7 +233,7 @@ class AIEngine {
                 //esto simula el movimiento
                 const newBoardArray = this.applyMoveToArray(boardArray, move);
 
-                const evaluation = this.minimax(newBoardArray, depth - 1, true);//no me tomaba la palabra eval creo que funciona como keyword?
+                const evaluation = this.minimax(newBoardArray, depth - 1, true);
                 minEval = Math.min(minEval, evaluation);
             }
             return minEval;

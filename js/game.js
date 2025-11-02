@@ -47,9 +47,8 @@ class Game {
             return;
         }
 
-    //que hace esto? convierte el tablero virtual que estaba muy atado al DOM a coordenadas asi la IA puede mover las piezas en el mismo
         const [fromRow, fromCol] = bestMove.from; //coordenadas de origen
-        const [toRow, toCol] = bestMove.to; //coordenadas de destino
+        const [toRow, toCol] = bestMove.to; //coordenadas finales
         const fromNum = fromRow * 8 + fromCol; //convertir coordenadas a numero de casilla
         const toNum = toRow * 8 + toCol;
 
@@ -57,20 +56,34 @@ class Game {
         const toSquare = this.board.fieldsByNum[toNum]; //casilla de destino
         const piece = fromSquare.querySelector('.checkers-piece-red'); //red porque la IA es roja
 
-        if (piece) { //este if es para verificar que la pieza exista en la casilla de origen antes de moverla, sino me tira error (no se xq)
+        if (piece) {
+            // mover la pieza al destino final
             fromSquare.removeChild(piece);
             toSquare.appendChild(piece);
-            if (bestMove.capture) { //si la mejor opcion fue capturar una pieza
-                const [cr, cc] = bestMove.capture;
-                const captureNum = cr * 8 + cc; //convertir coordenadas de captura a numero de casilla
-                const captured = this.board.fieldsByNum[captureNum].querySelector('.checkers-piece');
-                if (captured) captured.remove();
+
+            // si hay capturas (array de posiciones), eliminar todas esas piezas del DOM
+            if (bestMove.captures && bestMove.captures.length > 0) {
+                for (const [cr, cc] of bestMove.captures) {
+                    const captureNum = cr * 8 + cc;
+                    const captured = this.board.fieldsByNum[captureNum].querySelector('.checkers-piece');
+                    if (captured) captured.remove();
+                }
+            }
+
+            //actualizar en el dom si la pieza se corona
+            const finalRow = toRow;
+            if (!piece.classList.contains('king')) {
+                if ((piece.classList.contains('checkers-piece-red') && finalRow === 7) ||
+                    (piece.classList.contains('checkers-piece-blue') && finalRow === 0)) {
+                    piece.classList.add('king');
+                    piece.innerHTML = '👑';
+                }
             }
         }
 
-    console.log('[AI] Movimiento completado:', bestMove);
-    this.switchTurn();
-}
+        console.log('[AI] Movimiento completado:', bestMove);
+        this.switchTurn();
+    }
 
 
     checkGameStatus() {
@@ -78,7 +91,7 @@ class Game {
         const bluePieces = this.board.getPiecesByColor('blue');
         const redPieces = this.board.getPiecesByColor('red');
 
-        // checkea si el jugador actual no tiene movimientos posibles
+        //checkea si el jugador actual no tiene movimientos posibles
         if (possibleMoves.length === 0) {
             this.gameStatus = 'ended';
             this.winner = this.currentPlayer === 'red' ? 'blue' : 'red';
@@ -86,7 +99,7 @@ class Game {
             return;
         }
 
-        // Empate si hay 40 turnos o solo quedan 2 piezas
+        //empate
         if (bluePieces.length === 1 && redPieces.length === 1) {
             this.gameDraw();
             return;
@@ -97,7 +110,7 @@ class Game {
         this.container.innerHTML = '';
     }
 
-    isGameEnded() { // verifica si el juego termino
+    isGameEnded() { //verifica si el juego termino
         return this.gameStatus === 'ended';
     }
 
