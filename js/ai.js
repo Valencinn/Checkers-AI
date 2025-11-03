@@ -69,7 +69,7 @@ class AIEngine {
     */
     findCaptureSequences(boardArray, row, col) {
         const piece = boardArray[row][col];
-        const isKing = Math.abs(piece) === 2;
+        const isKing = piece === 2;
         const colorSign = Math.sign(piece);
         const directions = [];
 
@@ -109,7 +109,7 @@ class AIEngine {
 
                 copy[landR][landC] = movedPiece;
 
-                const recCall = this.findCaptureSequences(copy, landR, landC);
+                const recCall = this.findCaptureSequences(copy, landR, landC); //recursividad
 
                 if (recCall.length === 0) {
                     sequences.push({
@@ -121,21 +121,21 @@ class AIEngine {
                     for (const seq of recCall) {
                         sequences.push({
                             from: [row, col],
-                            to: seq.to,
-                            captures: [[midR, midC], ...seq.captures]
+                            to: seq.to, //seq.to es el destino final! 
+                            captures: [[midR, midC], ...seq.captures] //esto une la captura inicial con las capturas de la secuencia recursiva
                         });
                     }
                 }
             }
         }
 
-        return sequences;
+        return sequences; //returneamos las secuencias encontradas
     }
 
     getValidMovesForArray(boardArray, color) {
         const moves = []; //array para registrar los movimientos
         const captures = []; //array para registrar las capturas
-        const playerPieces = (color === 'red') ? [1, 2] : [-1, -2]; //definir las piezas del jugador
+        const playerPieces = (color === 'red') ? [1, 2] : [-1, -2];
         const direction = (color === 'red') ? 1 : -1;
 
         for (let row = 0; row < 8; row++) {
@@ -150,7 +150,7 @@ class AIEngine {
                     continue;
                 }
 
-                const isKing = Math.abs(piece) === 2;
+                const isKing = piece === 2;
                 const directions = [];
 
                 if (isKing) {
@@ -192,7 +192,7 @@ class AIEngine {
 
         let newPiece = piece;
 
-        if (Math.abs(piece) === 1) {
+        if (piece === 1) {
             if (piece > 0 && to[0] === 7) newPiece = 2;
             if (piece < 0 && to[0] === 0) newPiece = -2;
         }
