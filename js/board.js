@@ -42,20 +42,24 @@ class Board {
 
     //llena el tablero con piezas
     fillWithPieces() {
-
-        for (let i = 0; i < 3; i += 1) { //para las rojas
+        //piezas rojas
+        for (let i = 0; i < 3; i += 1) {
             for (let j = 0; j < 4; j += 1) {
-                let piece = new Piece("red");
-                const field = this.fieldsByNum[i * 8 + (j * 2) + ((i + 1) % 2)]; // el calculo es: fila * 8 + (columna * 2) + ((fila + 1) % 2).
+                const col = j * 2 + ((i + 1) % 2); //calculo de columna
+                const row = i;
+                let piece = new Piece(row, col, "red");
+                const field = this.fieldsByNum[i * 8 + col];
                 piece.setField(field);
-
             }
         }
 
-        for (let i = 5; i < 8; i += 1) { //para las negras/azules 
+        //piezas azules
+        for (let i = 5; i < 8; i += 1) {
             for (let j = 0; j < 4; j += 1) {
-                let piece = new Piece("blue");
-                const field = this.fieldsByNum[i * 8 + (j * 2) + ((i + 1) % 2)];
+                const col = j * 2 + ((i + 1) % 2);
+                const row = i;
+                let piece = new Piece(row, col, "blue");
+                const field = this.fieldsByNum[i * 8 + col];
                 piece.setField(field);
             }
         }
@@ -63,7 +67,7 @@ class Board {
 
     getPiecesByColor(color) { //devuelve todas las piezas de un color dado, usado para verificar si un jugador se quedo sin movimientos
         const pieces = [];
-        Object.values(this.fieldsByNum).forEach(square => { // iteramos por todas las casillas
+        Object.values(this.fieldsByNum).forEach(square => { //iteramos por todas las casillas
             const piece = square.querySelector('.checkers-piece');
             if (piece && piece.classList.contains(`checkers-piece-${color}`)) {
                 pieces.push(piece); //si la casilla tiene una pieza y es del color buscado, la agregamos al array
