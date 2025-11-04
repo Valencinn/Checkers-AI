@@ -21,7 +21,7 @@ class AIEngine {
         this.color = 'red';
 
         this.pieceValues = {
-            'player': { man: -1, king: -2 },
+            'player': { man: -1, king: -2 }, //valor negativo porque minimiza el score y encima asi se diferencia de la IA
             'ai': { man: 1, king: 2 }
         }
     }
@@ -57,7 +57,7 @@ class AIEngine {
 
     //cloneBoard crea una copia del boardArray asi no modifica el original y puede simular movimientos
     cloneBoard(boardArray) {
-        return boardArray.map(r => [...r]);
+        return boardArray.map(r => [...r]); //.map crea un nuevo array aplicando la funcion (boardArray) a cada elemento del array
     }
 
     /* 
@@ -89,7 +89,7 @@ class AIEngine {
             const landR = row + dr * 2;
             const landC = col + dc * 2;
 
-            if (!this.isOnBoard(midR, midC) || !this.isOnBoard(landR, landC)) continue; //continue significa que saltea a la siguiente iteracion del loop asi skipea el codigo de abajo en el caso que no se cumpla la condicion
+            if (!this.isOnBoard(midR, midC) || !this.isOnBoard(landR, landC)) continue; //continue saltea a la siguiente iteracion del loop asi skipea el codigo de abajo en el caso que no se cumpla la condicion
 
             const midPiece = boardArray[midR][midC];
             const landPiece = boardArray[landR][landC];
@@ -102,7 +102,7 @@ class AIEngine {
 
                 //esta es la coronacion durante secuencia si llega a fila final
                 let movedPiece = piece;
-                if (Math.abs(piece) === 1) {
+                if (piece === 1) {
                     if (colorSign > 0 && landR === 7) movedPiece = 2; //rojo corona
                     if (colorSign < 0 && landR === 0) movedPiece = -2; //azul corona
                 }
@@ -111,7 +111,7 @@ class AIEngine {
 
                 const recCall = this.findCaptureSequences(copy, landR, landC); //recursividad
 
-                if (recCall.length === 0) {
+                if (recCall.length === 0) { //si la llamada recursiva no encuentra mas capturas directamente mueve las cosas dentro del array
                     sequences.push({
                         from: [row, col],
                         to: [landR, landC],
