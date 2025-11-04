@@ -69,7 +69,7 @@ export default class Moves {
 
             //si comio, verificamos si puede seguir comiendo
             if (didCapture) {
-                const nextMoves = this.getValidMoves(this.selectedPiece).filter(m => m.capture !== null);
+                const nextMoves = this.getValidMoves(this.selectedPiece).filter(m => m.capture !== null); //con el .filter le doy la condicion de que solo me traiga los movimientos que sean capturas
                 if (nextMoves.length > 0) {
                     this.highlightMoves(nextMoves);
                     return; //no cambia turno todavia
