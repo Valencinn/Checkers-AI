@@ -27,7 +27,8 @@ export default class Moves {
         // click en una pieza
         if (piece) {
             const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
-            if (color !== this.game.currentPlayer) return;
+            if (color !== this.game.currentPlayer)
+                return; //nos aseguramos que el jugador solo pueda seleccionar sus propias piezas
 
             this.clearHighlights();
             this.selectedPiece = piece;
@@ -59,26 +60,26 @@ export default class Moves {
 
             // click en una casilla valida
         } else if (this.selectedPiece && square.classList.contains('highlight')) {
-            const captureAttr = square.getAttribute('data-capture');
-            const captureNum = captureAttr ? parseInt(captureAttr) : null;
+            const captureAttr = square.getAttribute('data-capture'); //captureAttr es el numero de la casilla de la pieza capturada
+            const captureNum = captureAttr ? captureAttr : null;
 
             const didCapture = this.movePiece(this.selectedPiece, square, captureNum);
 
             this.clearHighlights();
 
-            // si comio, verificamos si puede seguir comiendo
+            //si comio, verificamos si puede seguir comiendo
             if (didCapture) {
                 const nextMoves = this.getValidMoves(this.selectedPiece).filter(m => m.capture !== null);
                 if (nextMoves.length > 0) {
                     this.highlightMoves(nextMoves);
-                    return; // no cambia turno todavia
+                    return; //no cambia turno todavia
                 }
             }
 
-            // si no hay mas capturas, termina el turno
+            //si no hay mas capturas, termina el turno
             this.selectedPiece = null;
             this.game.switchTurn();
-            this.counter++; // contador de turnos
+            this.counter++; //contador de turnos
         }
     }
 
