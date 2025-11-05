@@ -79,17 +79,17 @@ body {
     width: 80%;
     height: 80%;
     border-radius: 100%;
-    transition: all 1s ease;
+    transition: all 2.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .checkers-piece-red {
     background: #f21832;
-    transition: 1s ease-in-out;
+    transition: 2.5s ease-in-out;
 }
 
 .checkers-piece-blue {
     background: #858cef;
-    transition: 1s ease-in-out;
+    transition: 2.5s ease-in-out;
 }
 
 .highlight {
@@ -100,4 +100,16 @@ body {
 .checkers-piece.king {
     border: 2px solid gold;
     box-shadow: 0 0 10px gold;
+}
+
+.new-game {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #345;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
 }
