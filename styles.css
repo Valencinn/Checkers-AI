@@ -37,7 +37,7 @@ body {
     height: 500px;
     display: flex;
     flex-wrap: wrap;
-    border-radius: 8px;
+    border: #563232 25px solid;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -79,15 +79,17 @@ body {
     width: 80%;
     height: 80%;
     border-radius: 100%;
-    transition: all 0.5s ease-in-out;
+    transition: all 1s ease;
 }
 
 .checkers-piece-red {
     background: #f21832;
+    transition: 1s ease-in-out;
 }
 
 .checkers-piece-blue {
     background: #858cef;
+    transition: 1s ease-in-out;
 }
 
 .highlight {
