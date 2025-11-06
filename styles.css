@@ -72,7 +72,7 @@ body {
     width: 80%;
     height: 80%;
     border-radius: 100%;
-    transition: all 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 2.5s /* cubic-bezier(0.4, 0, 0.2, 1) */; /*asi ya esta bien el cambio tiene que ser dentro de board y los nodos*/
     /* creo q ig es muy rapido */
 }
 

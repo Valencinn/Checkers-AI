@@ -22,6 +22,9 @@ class Piece {
         this.el.style.left = `${col * squareSize}px`;
     }
 
+
+    /*tengo que cambiar esto, lo que me pasa es que estoy tpeando el nodo en vez de moverlo, tengo que investigar como hacerlo*/
+    
     moveAnimation(nextRow, nextCol) {
         const squareSize = 62.5 //500/8
 
