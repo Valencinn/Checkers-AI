@@ -26,10 +26,10 @@ class AIEngine {
         }
     }
 
-    evaluateBoard(boardArray) { //calculo facil que hace la suma y resta de las piezas en el tablero asi dandole X valor a los dos jugadores
+    evaluateBoard(boardArray) { //calculo facil que hace la suma de las piezas en el tablero asi dandole X valor a los dos jugadores
         let score = 0;
         for (let row of boardArray) {
-            for (let cell of row) score += cell;
+            for (let cell of row) score += cell; //sumatoria de valores de piezas
         }
         return score;
     };
@@ -52,7 +52,8 @@ class AIEngine {
     };
 
     isOnBoard(row, col) {
-        return row >= 0 && row < 8 && col >= 0 && col < 8;
+        return row >= 0 && row < 8 && col >= 0 && col < 8; //row y col son entre 0 y 7
+        //isonboard es necesario para despues porque verifica en el proceso de comer
     }
 
     //cloneBoard crea una copia del boardArray asi no modifica el original y puede simular movimientos
@@ -66,6 +67,13 @@ class AIEngine {
     porque lo uso aca? para encontrar todas las secuencias de captura posibles para una pieza en particular.
     sino habia que hacer un calculo gigante para encontrar todas las capturas multiples posibles y encima no comia obligatoriamente porque se rompia ya que 
     podria haber varias opciones de captura en diferentes direcciones.
+
+    en codigo lo que hacemos es crear una funcion recursiva(findCaptureSequences) que toma el tablero, la fila y la columna de la pieza actual.
+    la funcion verifica todas las direcciones posibles de movimiento para la pieza y busca capturas validas.
+    Si encuentra una captura valida, crea una copia del tablero y simula el movimiento de captura. asi puede segui
+    investigando desde la nueva posicion de la pieza para encontrar capturas adicionales.
+
+    (ver notas)
     */
     findCaptureSequences(boardArray, row, col) {
         const piece = boardArray[row][col];
@@ -94,7 +102,9 @@ class AIEngine {
             const midPiece = boardArray[midR][midC];
             const landPiece = boardArray[landR][landC];
 
-            if (midPiece !== 0 && Math.sign(midPiece) !== Math.sign(piece) && landPiece === 0) {
+            if (midPiece !== 0 && Math.sign(midPiece) !== Math.sign(piece) && landPiece === 0) { 
+                //verificamos 3 cosas, que haya pieza en el medio, que sea del oponente (con el signo) y que la casilla de aterrizaje este vacia
+
                 //posible salto
                 const copy = this.cloneBoard(boardArray);
                 copy[row][col] = 0;
@@ -107,7 +117,7 @@ class AIEngine {
                     if (colorSign < 0 && landR === 0) movedPiece = -2; //azul corona
                 }
 
-                copy[landR][landC] = movedPiece;
+                copy[landR][landC] = movedPiece; //land es el aterrizaje y ponemos la pieza movida en la copia del tablero
 
                 const recCall = this.findCaptureSequences(copy, landR, landC); //recursividad
 
@@ -132,19 +142,19 @@ class AIEngine {
         return sequences; //returneamos las secuencias encontradas
     }
 
-    getValidMovesForArray(boardArray, color) {
-        const moves = []; //array para registrar los movimientos
-        const captures = []; //array para registrar las capturas
+    getValidMovesForArray(boardArray, color) { //devuelve todos los movimientos validos para el color dado en el boardArray
+        const moves = [];
+        const captures = [];
         const playerPieces = (color === 'red') ? [1, 2] : [-1, -2];
         const direction = (color === 'red') ? 1 : -1;
 
         for (let row = 0; row < 8; row++) {
             for (let col = 0; col < 8; col++) {
                 const piece = boardArray[row][col];
-                if (!playerPieces.includes(piece)) continue;
+                if (!playerPieces.includes(piece)) continue; //continue skipea el codigo de abajo y va a la siguiente iteracion
 
                 //DFS para encontrar secuencias de captura
-                const seqs = this.findCaptureSequences(boardArray, row, col);
+                const seqs = this.findCaptureSequences(boardArray, row, col); //recursividad devuelta para encontrar otras capturas seguidas a la primera
                 if (seqs.length > 0) {
                     seqs.forEach(s => captures.push(s)); //pusheo al array
                     continue;
@@ -153,6 +163,7 @@ class AIEngine {
                 const isKing = piece === 2;
                 const directions = [];
 
+                //en el caso que sea rey le damos la capacidad de moverse a las 4 diagonales
                 if (isKing) {
                     directions.push([1, -1], [1, 1], [-1, -1], [-1, 1]);
                 } else {
