@@ -203,6 +203,8 @@ class AIEngine {
 
     minimax(boardArray, depth, maxPlayer) {
 
+        console.count("Nodo creado");
+
         //caso terminal base: juego terminado o profundidad alcanzada
         if (depth === 0 || this.isTerminalState(boardArray)) {
             return this.evaluateBoard(boardArray);
@@ -240,7 +242,7 @@ class AIEngine {
         }
     }
 
-    getBestMove(boardArray, depth = 3) { //devuelve el mejor movimiento posible para la IA usando minimax que creamos antes
+    getBestMove(boardArray, depth) { //devuelve el mejor movimiento posible para la IA usando minimax que creamos antes
         const allMoves = this.getValidMovesForArray(boardArray, 'red'); //le pasamos los movimientos posibles con la funcion anterior
         let bestMove = null; //ponemos esto hasta que defina cual es el mejor movimiento
         let bestValue = -Infinity; //igual a minimax (esto es para maximizar)

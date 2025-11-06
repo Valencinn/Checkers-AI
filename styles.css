@@ -72,7 +72,13 @@ body {
     width: 80%;
     height: 80%;
     border-radius: 100%;
-    transition: all 2.5s /* cubic-bezier(0.4, 0, 0.2, 1) */; /*asi ya esta bien el cambio tiene que ser dentro de board y los nodos*/
+    transition: all 2.5s 
+    /* cubic-bezier(0.4, 0, 0.2, 1) */; /*asi ya esta bien el cambio tiene que ser dentro de board y los nodos*/
+
+    /*hacer animacion encargandome desde el board que los nodos se muevan no se tpen de posicion!, 
+    con esta transition ya deberia estar la parte "animada"
+    */
+
     /* creo q ig es muy rapido */
 }
 
