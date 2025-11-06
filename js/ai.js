@@ -260,7 +260,7 @@ class AIEngine {
 
         for (const move of allMoves) {
             const newBoard = this.applyMoveToArray(boardArray, move); //simulamos el movimiento
-            const evalValue = this.minimax(newBoard, depth - 1, false); //llamamos a minimax para evaluar el movimiento
+            const evalValue = this.minimax(newBoard, depth - 1, false); //llamamos a minimax para evaluar el movimiento, es -1 porque ya hicimos un movimiento
 
             if (evalValue > bestValue) {
                 bestValue = evalValue; //si el eval es mejor que el best actual decide que el eval = best
