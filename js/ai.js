@@ -70,7 +70,7 @@ class AIEngine {
     findCaptureSequences(boardArray, row, col) {
         const piece = boardArray[row][col];
         const isKing = piece === 2;
-        const colorSign = Math.sign(piece);
+        const colorSign = Math.sign(piece); //.sign devuelve el signo de un numero (positivo, negativo o cero)
         const directions = [];
 
         if (isKing) {
@@ -84,10 +84,10 @@ class AIEngine {
         const sequences = []; //array para guardar las secuencias de captura encontradas
 
         for (const [dr, dc] of directions) { //para cada direccion posible
-            const midR = row + dr;
+            const midR = row + dr; //pieza en el medio
             const midC = col + dc;
-            const landR = row + dr * 2;
-            const landC = col + dc * 2;
+            const landR = row + dr * 2; //hacia que fila
+            const landC = col + dc * 2;//hacia que columna
 
             if (!this.isOnBoard(midR, midC) || !this.isOnBoard(landR, landC)) continue; //continue saltea a la siguiente iteracion del loop asi skipea el codigo de abajo en el caso que no se cumpla la condicion
 
@@ -146,7 +146,7 @@ class AIEngine {
                 //DFS para encontrar secuencias de captura
                 const seqs = this.findCaptureSequences(boardArray, row, col);
                 if (seqs.length > 0) {
-                    seqs.forEach(s => captures.push(s));
+                    seqs.forEach(s => captures.push(s)); //pusheo al array
                     continue;
                 }
 
