@@ -1,5 +1,5 @@
 body {
-    background: #0142349f;
+    background: #4a6c4c;
     margin: 0;
     padding: 20px;
     font-family: 'Arial', sans-serif;
@@ -20,10 +20,10 @@ body {
 
 .title {
     text-align: center;
-    color: rgb(2, 30, 58);
+    color: #f0f0f0;
     font-size: 2.5em;
     margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 #board {
@@ -37,8 +37,59 @@ body {
     height: 500px;
     display: flex;
     flex-wrap: wrap;
-    border: #563232 25px solid;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    border: #8d6e63 25px solid;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.checkers-grid {
+    position: relative;
+    width: 12.5%;
+    height: 12.5%;
+}
+
+.dark-square {
+    background: #689f6d;
+    background-image: repeating-linear-gradient(45deg,
+            /*efecto madera*/
+            rgba(0, 0, 0, 0.05) 0,
+            rgba(0, 0, 0, 0.05) 1px,
+            transparent 1px,
+            transparent 2px);
+}
+
+.light-square {
+    background: #f0e6c5;
+}
+
+.checkers-piece {
+    top: 10%;
+    left: 10%;
+    position: relative;
+    width: 80%;
+    height: 80%;
+    border-radius: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5),
+        inset 0 0 10px rgba(255, 255, 255, 0.2),
+        inset 0 5px 8px rgba(0, 0, 0, 0.2);
+    transition: all 2.5s;
+}
+
+/* Pieza roja*/
+.checkers-piece-red {
+    background: #b22222;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.5),
+        inset 0 0 15px rgba(255, 255, 255, 0.3),
+        inset 0 -5px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* era pieza azul deberia cambiarle nombre*/
+.checkers-piece-blue {
+    background: #fdf5e6;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5),
+        inset 0 0 15px rgba(255, 255, 255, 0.9),
+        inset 0 -5px 8px rgba(0, 0, 0, 0.2);
 }
 
 .game-info {
@@ -51,63 +102,27 @@ body {
     text-align: center;
 }
 
-.checkers-grid {
-    position: relative;
-    width: 12.5%;
-    height: 12.5%;
-}
-
-.dark-square {
-    background: #345;
-}
-
-.light-square {
-    background: #eef;
-}
-
-.checkers-piece {
-    top: 10%;
-    left: 10%;
-    position: relative;
-    width: 80%;
-    height: 80%;
-    border-radius: 100%;
-    transition: all 2.5s 
-    /* cubic-bezier(0.4, 0, 0.2, 1) */; /*asi ya esta bien el cambio tiene que ser dentro de board y los nodos*/
-
-    /*hacer animacion encargandome desde el board que los nodos se muevan no se tpen de posicion!, 
-    con esta transition ya deberia estar la parte "animada"
-    */
-
-    /* creo q ig es muy rapido */
-}
-
-.checkers-piece-red {
-    background: #f21832;
-    transition: 2.5s ease-in-out;
-}
-
-.checkers-piece-blue {
-    background: #858cef;
-    transition: 2.5s ease-in-out;
-}
-
 .highlight {
-    outline: 3px solid rgba(0, 255, 0, 0.6);
+    /* falta cambiar esto */
+    outline: 3px solid rgba(255, 215, 0, 0.8);
     cursor: pointer;
 }
 
 .checkers-piece.king {
-    border: 2px solid gold;
-    box-shadow: 0 0 10px gold;
+    border: 3px solid #ffd700;
+    box-shadow:
+        0 0 15px #ffd700,
+        0 4px 6px rgba(0, 0, 0, 0.5),
+        inset 0 5px 8px rgba(0, 0, 0, 0.2);
 }
 
 .new-game {
+    /* falta cambiar esto */
     margin-top: 500px;
     margin-left: 0px;
     margin-right: 300px;
     padding: 10px 20px;
-    background-color: #345;
+    background-color: #8d6e63;
     color: white;
     border: none;
     border-radius: 5px;
@@ -117,5 +132,5 @@ body {
 }
 
 .new-game:hover {
-    background-color: #234;
+    background-color: #6d4c41;
 }
