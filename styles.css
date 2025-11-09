@@ -105,7 +105,6 @@ body {
     box-sizing: border-box;
     pointer-events: none;
     z-index: 99;
-    /* Asegura que esté por encima de la casilla */
 }
 
 .checkers-piece.king {
