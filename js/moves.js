@@ -23,6 +23,7 @@ export default class Moves {
         }
 
         const piece = square.querySelector('.checkers-piece');
+        /*console.log(piece.parentElement);*/ //devuelve donde se encuentra la pieza
 
         // click en una pieza
         if (piece) {
@@ -169,31 +170,59 @@ export default class Moves {
     }
 
     movePiece(piece, targetSquare, captureNum = null) {
-        let didCapture = false;
+    let didCapture = false;
 
-        //eliminar pieza capturada
-        if (captureNum !== null && !Number.isNaN(captureNum)) {
-            const middleSquare = this.board.fieldsByNum[captureNum];
-            const pieceToEat = middleSquare.querySelector('.checkers-piece');
-            if (pieceToEat) {
-                pieceToEat.remove();
-                didCapture = true;
-            }
+    //borramos pieza capturada
+    if (captureNum !== null && !Number.isNaN(captureNum)) {
+        const middleSquare = this.board.fieldsByNum[captureNum];
+        const pieceToEat = middleSquare.querySelector('.checkers-piece');
+        if (pieceToEat) {
+            pieceToEat.remove();
+            didCapture = true;
         }
-
-        //mover la pieza
-        targetSquare.appendChild(piece);
-
-        // coronar
-        const targetNum = parseInt(targetSquare.getAttribute('data-num'));
-        const row = Math.floor(targetNum / 8);
-        const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
-        if ((color === 'red' && row === 7) || (color === 'blue' && row === 0)) { //si llega al fondo del tablero (acordate que funciona de 0 a 7 no de 1 a 8) corona
-            piece.classList.add('king'); //le agrega la clase king que le permite moverse libremente
-            piece.innerHTML = '👑';
-        }
-
-        return didCapture;
     }
+
+    //posicion para la animacion
+    const squareSize = 62.5;
+    const fromNum = parseInt(piece.parentElement.dataset.num);
+    const toNum = parseInt(targetSquare.dataset.num);
+    const fromRow = Math.floor(fromNum / 8);
+    const fromCol = fromNum % 8;
+    const toRow = Math.floor(toNum / 8);
+    const toCol = toNum % 8;
+
+    const deltaX = (fromCol - toCol) * squareSize;
+    const deltaY = (fromRow - toRow) * squareSize;
+
+    //le ponemos hacia donde y la animacion a transition
+    piece.style.zIndex = '99';
+    piece.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+    piece.style.transition = 'transform 0.3s ease-in-out';
+
+    //en el dom movemos la pieza
+    targetSquare.appendChild(piece);
+
+    requestAnimationFrame(() => { //requestAnimationFrame() hace que lo pedido se ejecute justo antes del proximo frame, lo uso para activar la animacion
+        piece.style.transform = 'translate(0, 0)';
+    });
+
+    //sacamos el transform y transition dsp de la animacion
+    setTimeout(() => {
+        piece.style.transform = '';
+        piece.style.transition = '';
+        piece.style.zIndex = '';
+    }, 300);
+
+    //coronaacion
+    const targetNum = parseInt(targetSquare.getAttribute('data-num'));
+    const row = Math.floor(targetNum / 8);
+    const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
+    if ((color === 'red' && row === 7) || (color === 'blue' && row === 0)) {
+        piece.classList.add('king');
+        piece.innerHTML = '👑';
+    }
+
+    return didCapture;
+}
 }
 

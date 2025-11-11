@@ -72,21 +72,16 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5),
         inset 0 0 10px rgba(255, 255, 255, 0.2),
         inset 0 5px 8px rgba(0, 0, 0, 0.2);
-    transition: all 2.5s;
 }
 
 .checkers-piece-red {
     background: #b22222;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5),
-        inset 0 0 15px rgba(255, 255, 255, 0.3),
-        inset 0 -5px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.3), inset 0 -5px 8px rgba(0, 0, 0, 0.2);
 }
 
 .checkers-piece-blue {
     background: #fdf5e6;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5),
-        inset 0 0 15px rgba(255, 255, 255, 0.9),
-        inset 0 -5px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.9), inset 0 -5px 8px rgba(0, 0, 0, 0.2);
 }
 
 .checkers-grid.highlight {

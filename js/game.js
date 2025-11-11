@@ -21,7 +21,7 @@ class Game {
     }
 
     gameDraw() {
-        this.gameStatus = 'ended'; // Add this line to end the game
+        this.gameStatus = 'ended';
         this.winner = 'draw';
         console.log('[Game] Game Over! Empate!');
     }
@@ -36,7 +36,7 @@ class Game {
         }
     }
 
-    playAITurn() { //este es el manejo de la IA
+    playAITurn() {
         const ai = new AIEngine();
         const boardArray = this.board.boardArray();
         const bestMove = ai.getBestMove(boardArray, 3);
@@ -47,21 +47,17 @@ class Game {
             return;
         }
 
-        const [fromRow, fromCol] = bestMove.from; //coordenadas de origen
-        const [toRow, toCol] = bestMove.to; //coordenadas finales
-        const fromNum = fromRow * 8 + fromCol; //convertir coordenadas a numero de casilla
+        const [fromRow, fromCol] = bestMove.from;
+        const [toRow, toCol] = bestMove.to;
+        const fromNum = fromRow * 8 + fromCol;
         const toNum = toRow * 8 + toCol;
 
-        const fromSquare = this.board.fieldsByNum[fromNum]; //casilla de origen
-        const toSquare = this.board.fieldsByNum[toNum]; //casilla de destino
-        const piece = fromSquare.querySelector('.checkers-piece-red'); //red porque la IA es roja
+        const fromSquare = this.board.fieldsByNum[fromNum];
+        const toSquare = this.board.fieldsByNum[toNum];
+        const piece = fromSquare.querySelector('.checkers-piece-red');
 
         if (piece) {
-            // mover la pieza al destino final
-            fromSquare.removeChild(piece);
-            toSquare.appendChild(piece);
-
-            // si hay capturas (array de posiciones), eliminar todas esas piezas del DOM
+            //sacamos las piezas capturadas
             if (bestMove.captures && bestMove.captures.length > 0) {
                 for (const [cr, cc] of bestMove.captures) {
                     const captureNum = cr * 8 + cc;
@@ -70,19 +66,46 @@ class Game {
                 }
             }
 
-            //actualizar en el dom si la pieza se corona
-            const finalRow = toRow;
+            const squareSize = 62.5;
+            const deltaX = (fromCol - toCol) * squareSize;
+            const deltaY = (fromRow - toRow) * squareSize;
+
+            //le ponemos hacia donde y la animacion a transition
+            piece.style.zIndex = '99';
+            piece.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+            piece.style.transition = 'transform 0.3s ease-in-out';
+
+            //en el dom movemos la pieza
+            fromSquare.removeChild(piece);
+            toSquare.appendChild(piece);
+
+            requestAnimationFrame(() => {
+                piece.style.transform = 'translate(0, 0)';
+            });
+
+            //sacamos el transform y transition dsp de la animacion
+            setTimeout(() => {
+                piece.style.transform = '';
+                piece.style.transition = '';
+                piece.style.zIndex = '';
+                console.log('[AI] Movimiento completado:', bestMove);
+                this.switchTurn();
+            }, 300);
+
+            //coronaacion
             if (!piece.classList.contains('king')) {
-                if ((piece.classList.contains('checkers-piece-red') && finalRow === 7) ||
-                    (piece.classList.contains('checkers-piece-blue') && finalRow === 0)) {
-                    piece.classList.add('king');
-                    piece.innerHTML = '👑';
+                if (piece.classList.contains('checkers-piece-red') && toRow === 7) {
+                    setTimeout(() => {
+                        piece.classList.add('king');
+                        piece.innerHTML = '👑';
+                    }, 300);
                 }
             }
-        }
 
-        console.log('[AI] Movimiento completado:', bestMove);
-        this.switchTurn();
+        } else {
+            console.log('[AI] No se encontró la pieza en la casilla de origen');
+            this.switchTurn();
+        }
     }
 
 
