@@ -18,7 +18,22 @@ class Game {
 
         this.moves = new Moves(this.board, this);
         console.log('moves inicializados'); //verificacion del setteo de moves
+
+        /*this.positionMemory = new Map();
+        this.moveHistory = []; //aca guardamos los movimientos
+        this.positionCounter = 0; //para la repeticion
+        this.recordPosition();*/
     }
+
+    /*positionKey() {
+        return JSON.stringify({ //asi la pasamos a la key!
+            board: this.board.boardArray(),
+            player: this.currentPlayer
+        });
+    }
+
+    recordPosition() {
+    }*/
 
     gameDraw() {
         this.gameStatus = 'ended';
