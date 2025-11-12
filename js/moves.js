@@ -1,5 +1,10 @@
 import Piece from './piece.js';
 
+/*
+    acordate: [1,-1] seria abajo izq 
+    ya esta con eso te acordas los otroas xd
+*/
+
 export default class Moves {
     constructor(board, game) {
         this.board = board;
@@ -112,7 +117,7 @@ export default class Moves {
                 const hasPiece = targetSquare.querySelector('.checkers-piece');
 
                 if (!hasPiece) { //si no tiene pieza, es un movimiento valido
-                    moves.push({ square: targetSquare, capture: null }); // si en el target square no hay pieza, es un movimiento normal
+                    moves.push({ square: targetSquare, capture: null }); //si en el target square no hay pieza, es un movimiento normal
                 } else { //si tiene pieza, verificamos si es del oponente y si se puede saltar
                     const adjPiece = hasPiece;
                     const adjColor = adjPiece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
@@ -134,7 +139,7 @@ export default class Moves {
         return moves;
     }
 
-    getAllPossibleMoves(color) { // obtiene todos los movimientos posibles para un color dado
+    getAllPossibleMoves(color) { //obtiene todos los movimientos posibles para un color dado
         const pieces = this.board.getPiecesByColor(color);
         let allMoves = [];
 
@@ -170,59 +175,59 @@ export default class Moves {
     }
 
     movePiece(piece, targetSquare, captureNum = null) {
-    let didCapture = false;
+        let didCapture = false;
 
-    //borramos pieza capturada
-    if (captureNum !== null && !Number.isNaN(captureNum)) {
-        const middleSquare = this.board.fieldsByNum[captureNum];
-        const pieceToEat = middleSquare.querySelector('.checkers-piece');
-        if (pieceToEat) {
-            pieceToEat.remove();
-            didCapture = true;
+        //borramos pieza capturada
+        if (captureNum !== null && !Number.isNaN(captureNum)) {
+            const middleSquare = this.board.fieldsByNum[captureNum];
+            const pieceToEat = middleSquare.querySelector('.checkers-piece');
+            if (pieceToEat) {
+                pieceToEat.remove();
+                didCapture = true;
+            }
         }
+
+        //posicion para la animacion
+        const squareSize = 62.5;
+        const fromNum = parseInt(piece.parentElement.dataset.num);
+        const toNum = parseInt(targetSquare.dataset.num);
+        const fromRow = Math.floor(fromNum / 8);
+        const fromCol = fromNum % 8;
+        const toRow = Math.floor(toNum / 8);
+        const toCol = toNum % 8;
+
+        const deltaX = (fromCol - toCol) * squareSize;
+        const deltaY = (fromRow - toRow) * squareSize;
+
+        //le ponemos hacia donde y la animacion a transition
+        piece.style.zIndex = '99';
+        piece.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        piece.style.transition = 'transform 0.3s ease-in-out';
+
+        //en el dom movemos la pieza
+        targetSquare.appendChild(piece);
+
+        requestAnimationFrame(() => { //requestAnimationFrame() hace que lo pedido se ejecute justo antes del proximo frame, lo uso para activar la animacion
+            piece.style.transform = 'translate(0, 0)';
+        });
+
+        //sacamos el transform y transition dsp de la animacion
+        setTimeout(() => {
+            piece.style.transform = '';
+            piece.style.transition = '';
+            piece.style.zIndex = '';
+        }, 300);
+
+        //coronaacion
+        const targetNum = parseInt(targetSquare.getAttribute('data-num'));
+        const row = Math.floor(targetNum / 8);
+        const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
+        if ((color === 'red' && row === 7) || (color === 'blue' && row === 0)) {
+            piece.classList.add('king');
+            piece.innerHTML = '👑';
+        }
+
+        return didCapture;
     }
-
-    //posicion para la animacion
-    const squareSize = 62.5;
-    const fromNum = parseInt(piece.parentElement.dataset.num);
-    const toNum = parseInt(targetSquare.dataset.num);
-    const fromRow = Math.floor(fromNum / 8);
-    const fromCol = fromNum % 8;
-    const toRow = Math.floor(toNum / 8);
-    const toCol = toNum % 8;
-
-    const deltaX = (fromCol - toCol) * squareSize;
-    const deltaY = (fromRow - toRow) * squareSize;
-
-    //le ponemos hacia donde y la animacion a transition
-    piece.style.zIndex = '99';
-    piece.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-    piece.style.transition = 'transform 0.3s ease-in-out';
-
-    //en el dom movemos la pieza
-    targetSquare.appendChild(piece);
-
-    requestAnimationFrame(() => { //requestAnimationFrame() hace que lo pedido se ejecute justo antes del proximo frame, lo uso para activar la animacion
-        piece.style.transform = 'translate(0, 0)';
-    });
-
-    //sacamos el transform y transition dsp de la animacion
-    setTimeout(() => {
-        piece.style.transform = '';
-        piece.style.transition = '';
-        piece.style.zIndex = '';
-    }, 300);
-
-    //coronaacion
-    const targetNum = parseInt(targetSquare.getAttribute('data-num'));
-    const row = Math.floor(targetNum / 8);
-    const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
-    if ((color === 'red' && row === 7) || (color === 'blue' && row === 0)) {
-        piece.classList.add('king');
-        piece.innerHTML = '👑';
-    }
-
-    return didCapture;
-}
 }
 
