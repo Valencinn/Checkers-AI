@@ -1,13 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+
 body {
     background: #354936;
     margin: 0;
     padding: 20px;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Nunito', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    overflow: hidden;
 }
 
 .checkers-wrapper {
@@ -37,7 +40,7 @@ body {
     height: 500px;
     display: flex;
     flex-wrap: wrap;
-    border: #8d6e63 25px solid;
+    border: #C4A484 25px solid;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
 }
@@ -103,10 +106,8 @@ body {
 }
 
 .checkers-piece.king {
-    border: 3px solid #ffd700;
-    box-shadow: 0 0 15px #ffd700,
-        0 4px 6px rgba(0, 0, 0, 0.5),
-        inset 0 5px 8px rgba(0, 0, 0, 0.2);
+    border: 2px solid gold;
+    box-shadow: 0 0 10px gold;
 }
 
 .game-info {
@@ -136,8 +137,7 @@ body {
     margin-top: 350px;
 }
 
-.new-game,
-.surrender-btn {
+.new-game {
     margin-top: 380px;
     padding: 10px 20px;
     background-color: #345;
@@ -149,18 +149,9 @@ body {
     transition: background-color 0.3s, transform 0.2s;
 }
 
-.new-game:hover,
-.surrender-btn:hover {
+.new-game:hover {
     background-color: #234;
     transform: translateY(-2px);
-}
-
-.surrender-btn {
-    background-color: #912626;
-}
-
-.surrender-btn:hover {
-    background-color: #b83030;
 }
 
 .new-game:hover {
