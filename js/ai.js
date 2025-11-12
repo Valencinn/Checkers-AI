@@ -91,18 +91,18 @@ class AIEngine {
 
         const sequences = []; //array para guardar las secuencias de captura encontradas
 
-        for (const [dr, dc] of directions) { //para cada direccion posible
-            const midR = row + dr; //pieza en el medio
-            const midC = col + dc;
-            const landR = row + dr * 2; //hacia que fila
-            const landC = col + dc * 2;//hacia que columna
+        for (const [changeRow, changeCol] of directions) { //para cada direccion posible
+            const midR = row + changeRow; //pieza en el medio
+            const midC = col + changeCol;
+            const landR = row + changeRow * 2; //hacia que fila
+            const landC = col + changeCol * 2;//hacia que columna
 
             if (!this.isOnBoard(midR, midC) || !this.isOnBoard(landR, landC)) continue; //continue saltea a la siguiente iteracion del loop asi skipea el codigo de abajo en el caso que no se cumpla la condicion
 
             const midPiece = boardArray[midR][midC];
             const landPiece = boardArray[landR][landC];
 
-            if (midPiece !== 0 && Math.sign(midPiece) !== Math.sign(piece) && landPiece === 0) { 
+            if (midPiece !== 0 && Math.sign(midPiece) !== Math.sign(piece) && landPiece === 0) {
                 //verificamos 3 cosas, que haya pieza en el medio, que sea del oponente (con el signo) y que la casilla de aterrizaje este vacia
 
                 //posible salto
@@ -170,9 +170,9 @@ class AIEngine {
                     directions.push([direction, -1], [direction, 1]);
                 }
 
-                for (const [dr, dc] of directions) {
-                    const newRow = row + dr;
-                    const newCol = col + dc;
+                for (const [changeRow, changeCol] of directions) {
+                    const newRow = row + changeRow;
+                    const newCol = col + changeCol;
 
                     if (this.isOnBoard(newRow, newCol) && boardArray[newRow][newCol] === 0) {
                         moves.push({
@@ -196,8 +196,8 @@ class AIEngine {
         newBoard[from[0]][from[1]] = 0; //vacia la casilla de origen
 
         if (captures && captures.length > 0) {
-            for (const [cr, cc] of captures) {
-                newBoard[cr][cc] = 0;
+            for (const [captureRow, captureCol] of captures) {
+                newBoard[captureRow][captureCol] = 0;
             }
         }
 
@@ -214,7 +214,7 @@ class AIEngine {
 
     minimax(boardArray, depth, maxPlayer) {
 
-        console.count("Nodo creado");
+        /*console.count("Nodo creado"); para revisar cuantos nodos se van creando*/
 
         //caso terminal base: juego terminado o profundidad alcanzada
         if (depth === 0 || this.isTerminalState(boardArray)) {

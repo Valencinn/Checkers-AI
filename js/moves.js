@@ -30,7 +30,7 @@ export default class Moves {
         const piece = square.querySelector('.checkers-piece');
         /*console.log(piece.parentElement);*/ //devuelve donde se encuentra la pieza
 
-        // click en una pieza
+        //click en una pieza
         if (piece) {
             const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
             if (color !== this.game.currentPlayer)
@@ -39,27 +39,27 @@ export default class Moves {
             this.clearHighlights();
             this.selectedPiece = piece;
 
-            // mostrar las capturas obligatorias si las hay
+            //mostrar las capturas obligatorias si las hay
             const allPieces = this.board.getPiecesByColor(this.game.currentPlayer);
             let mandatoryCaptures = [];
 
-            allPieces.forEach(p => {
-                const moves = this.getValidMoves(p);
-                const captures = moves.filter(m => m.capture !== null);
+            allPieces.forEach(piece => {
+                const moves = this.getValidMoves(piece);
+                const captures = moves.filter(move => move.capture !== null);
                 if (captures.length > 0) {
-                    mandatoryCaptures.push({ piece: p, moves: captures });
+                    mandatoryCaptures.push({ piece: piece, moves: captures });
                 }
             });
 
-            // Si hay capturas obligatorias, solo muestra esas
+            //si hay capturas obligatorias, solo muestra esas
             if (mandatoryCaptures.length > 0) {
-                // Solo muestra los movimientos de captura para la pieza seleccionada
-                const canThisPieceCapture = mandatoryCaptures.find(m => m.piece === piece);
+                //solo muestra los movimientos de captura para la pieza seleccionada
+                const canThisPieceCapture = mandatoryCaptures.find(capture => capture.piece === piece);
                 if (canThisPieceCapture) {
                     this.highlightMoves(canThisPieceCapture.moves);
                 }
             } else {
-                // Si no hay capturas obligatorias, muestra todos los movimientos válidos
+                //si no hay capturas obligatorias, muestra todos los movimientos validos
                 const moves = this.getValidMoves(piece);
                 this.highlightMoves(moves);
             }
@@ -75,7 +75,7 @@ export default class Moves {
 
             //si comio, verificamos si puede seguir comiendo
             if (didCapture) {
-                const nextMoves = this.getValidMoves(this.selectedPiece).filter(m => m.capture !== null); //con el .filter le doy la condicion de que solo me traiga los movimientos que sean capturas
+                const nextMoves = this.getValidMoves(this.selectedPiece).filter(move => move.capture !== null); //con el .filter le doy la condicion de que solo me traiga los movimientos que sean capturas
                 if (nextMoves.length > 0) {
                     this.highlightMoves(nextMoves);
                     return; //no cambia turno todavia
@@ -107,9 +107,9 @@ export default class Moves {
 
         const moves = []; //en este array guardamos los movimientos validos
 
-        directions.forEach(([dr, dc]) => { //se suele nomenclar dr y dc como delta row y delta col que significa cambio en fila y cambio en columna
-            const adjRow = row + dr; //calcula la fila adyacente
-            const adjCol = col + dc; //calcula la columna adyacente
+        directions.forEach(([changeRow, changeCol]) => {
+            const adjRow = row + changeRow; //calcula la fila adyacente
+            const adjCol = col + changeCol; //calcula la columna adyacente
 
             if (this.isOnBoard(adjRow, adjCol)) { //si la casilla adyacente este dentro del tablero...
                 const targetNum = adjRow * 8 + adjCol; //calcula el numero de la casilla adyacente 
@@ -122,8 +122,8 @@ export default class Moves {
                     const adjPiece = hasPiece;
                     const adjColor = adjPiece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
                     if (adjColor !== color) {
-                        const jumpRow = row + dr * 2; //saltamos la fila
-                        const jumpCol = col + dc * 2;// saltamos la columna
+                        const jumpRow = row + changeRow * 2; //saltamos la fila
+                        const jumpCol = col + changeCol * 2;//saltamos la columna
                         if (this.isOnBoard(jumpRow, jumpCol)) {
                             const jumpNum = jumpRow * 8 + jumpCol;
                             const jumpSquare = this.board.fieldsByNum[jumpNum];
@@ -196,12 +196,12 @@ export default class Moves {
         const toRow = Math.floor(toNum / 8);
         const toCol = toNum % 8;
 
-        const deltaX = (fromCol - toCol) * squareSize;
-        const deltaY = (fromRow - toRow) * squareSize;
+        const whereX = (fromCol - toCol) * squareSize;
+        const whereY = (fromRow - toRow) * squareSize;
 
         //le ponemos hacia donde y la animacion a transition
         piece.style.zIndex = '99';
-        piece.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+        piece.style.transform = `translate(${whereX}px, ${whereY}px)`;
         piece.style.transition = 'transform 0.3s ease-in-out';
 
         //en el dom movemos la pieza
