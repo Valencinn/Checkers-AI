@@ -58,7 +58,7 @@ class AIEngine {
 
     //cloneBoard crea una copia del boardArray asi no modifica el original y puede simular movimientos
     cloneBoard(boardArray) {
-        return boardArray.map(r => [...r]); //.map crea un nuevo array aplicando la funcion (boardArray) a cada elemento del array
+        return boardArray.map(elArray => [...elArray]); //.map crea un nuevo array aplicando la funcion (boardArray) a cada elemento
     }
 
     /* 
@@ -125,14 +125,16 @@ class AIEngine {
                     sequences.push({
                         from: [row, col],
                         to: [landR, landC],
-                        captures: [[midR, midC]]
+                        captures: [[midR, midC]],
+                        path: [[row, col], [landR, landC]] //ESTO NECESITABA PARA QUE MUESTRE LAS DEL MEDIO!
                     });
                 } else {
                     for (const seq of recCall) {
                         sequences.push({
                             from: [row, col],
                             to: seq.to, //seq.to es el destino final! 
-                            captures: [[midR, midC], ...seq.captures] //esto une la captura inicial con las capturas de la secuencia recursiva
+                            captures: [[midR, midC], ...seq.captures], //esto une la captura inicial con las capturas de la secuencia recursiva
+                            path: [[row, col], ...seq.path]
                         });
                     }
                 }
@@ -178,7 +180,8 @@ class AIEngine {
                         moves.push({
                             from: [row, col],
                             to: [newRow, newCol],
-                            captures: []
+                            captures: [],
+                            path: [[row, col], [newRow, newCol]]
                         });
                     }
                 }
@@ -216,6 +219,7 @@ class AIEngine {
 
         /*console.count("Nodo creado"); para revisar cuantos nodos se van creando*/
         console.count("Nodo creado")
+        
         //caso terminal base: juego terminado o profundidad alcanzada
         if (depth === 0 || this.isTerminalState(boardArray)) {
             return this.evaluateBoard(boardArray);

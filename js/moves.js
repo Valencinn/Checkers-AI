@@ -188,7 +188,7 @@ export default class Moves {
         }
 
         //posicion para la animacion
-        const squareSize = 62.5;
+        const squareSize = piece.parentElement.getBoundingClientRect().width //esto era lo q decia fran
         const fromNum = parseInt(piece.parentElement.dataset.num);
         const toNum = parseInt(targetSquare.dataset.num);
         const fromRow = Math.floor(fromNum / 8);
@@ -196,12 +196,12 @@ export default class Moves {
         const toRow = Math.floor(toNum / 8);
         const toCol = toNum % 8;
 
-        const whereX = (fromCol - toCol) * squareSize;
-        const whereY = (fromRow - toRow) * squareSize;
+        const jumpX = (fromCol - toCol) * squareSize;
+        const jumpY = (fromRow - toRow) * squareSize;
 
         //le ponemos hacia donde y la animacion a transition
         piece.style.zIndex = '99';
-        piece.style.transform = `translate(${whereX}px, ${whereY}px)`;
+        piece.style.transform = `translate(${jumpX}px, ${jumpY}px)`;
         piece.style.transition = 'transform 0.3s ease-in-out';
 
         //en el dom movemos la pieza

@@ -26,13 +26,13 @@ class Game {
     }
 
     /*positionKey() {
-        return JSON.stringify({ //asi la pasamos a la key!
-            board: this.board.boardArray(),
-            player: this.currentPlayer
-        });
+        return JSON.stringify /7asi se pasaria la key
     }
 
     recordPosition() {
+
+
+    TODO ESTO VA A SER PARA LA NOTACION!
     }*/
 
     gameDraw() {
@@ -51,7 +51,11 @@ class Game {
         }
     }
 
-    playAITurn() {
+    wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async playAITurn() {
         const ai = new AIEngine();
         const boardArray = this.board.boardArray();
         const bestMove = ai.getBestMove(boardArray, 3);
@@ -62,65 +66,65 @@ class Game {
             return;
         }
 
-        const [fromRow, fromCol] = bestMove.from;
-        const [toRow, toCol] = bestMove.to;
-        const fromNum = fromRow * 8 + fromCol;
-        const toNum = toRow * 8 + toCol;
+        const {path, captures} = bestMove;
+        const [startRow, startCol] = path[0];
+        const startNum = startRow * 8 + startCol;
+        const startSquare = this.board.fieldsByNum[startNum];
+        const squareSize = startSquare.getBoundingClientRect().width;
+        const piece = startSquare.querySelector('.checkers-piece-red');
 
-        const fromSquare = this.board.fieldsByNum[fromNum];
-        const toSquare = this.board.fieldsByNum[toNum];
-        const piece = fromSquare.querySelector('.checkers-piece-red');
+        if (!piece) {
+            console.log('[AI] No se encontró la pieza en la casilla de origen');
+            this.switchTurn();
+            return;
+        }
 
-        if (piece) {
-            //sacamos las piezas capturadas
-            if (bestMove.captures && bestMove.captures.length > 0) {
-                for (const [cr, cc] of bestMove.captures) {
-                    const captureNum = cr * 8 + cc;
-                    const captured = this.board.fieldsByNum[captureNum].querySelector('.checkers-piece');
-                    if (captured) captured.remove();
-                }
+        //(path.length - 1) es el numero de saltos.[A, B, C] tiene 2 saltos (A>B, B->C)
+        for (let i = 0; i < path.length - 1; i++) {
+            const [fromRow, fromCol] = path[i];
+            const [toRow, toCol] = path[i + 1];
+
+            const toNum = toRow * 8 + toCol;
+            const toSquare = this.board.fieldsByNum[toNum];
+
+            if (captures && captures[i]) {
+                const [captureRow, captureCol] = captures[i];
+                const captureNum = captureRow * 8 + captureCol;
+                const captured = this.board.fieldsByNum[captureNum].querySelector('.checkers-piece');
+                if (captured) captured.remove();
             }
 
-            const squareSize = 62.5;
-            const deltaX = (fromCol - toCol) * squareSize;
-            const deltaY = (fromRow - toRow) * squareSize;
+            const jumpX = (fromCol - toCol) * squareSize;
+            const jumpY = (fromRow - toRow) * squareSize;
 
-            //le ponemos hacia donde y la animacion a transition
             piece.style.zIndex = '99';
-            piece.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+            piece.style.transform = `translate(${jumpX}px, ${jumpY}px)`;
             piece.style.transition = 'transform 0.3s ease-in-out';
 
-            //en el dom movemos la pieza
-            fromSquare.removeChild(piece);
+            //movemos pieza en DOM
             toSquare.appendChild(piece);
 
             requestAnimationFrame(() => {
                 piece.style.transform = 'translate(0, 0)';
             });
 
-            //sacamos el transform y transition dsp de la animacion
-            setTimeout(() => {
-                piece.style.transform = '';
-                piece.style.transition = '';
-                piece.style.zIndex = '';
-                console.log('[AI] Movimiento completado:', bestMove);
-                this.switchTurn();
-            }, 300);
-
-            //coronaacion
-            if (!piece.classList.contains('king')) {
-                if (piece.classList.contains('checkers-piece-red') && toRow === 7) {
-                    setTimeout(() => {
-                        piece.classList.add('king');
-                        piece.innerHTML = '👑';
-                    }, 300);
-                }
-            }
-
-        } else {
-            console.log('[AI] No se encontró la pieza en la casilla de origen');
-            this.switchTurn();
+            //para q se vea todo
+            await this.wait(300);
+            piece.style.transform = '';
+            piece.style.transition = '';
+            piece.style.zIndex = '';
         }
+
+        const [finalRow] = path[path.length - 1];
+        if (!piece.classList.contains('king')) {
+            if (piece.classList.contains('checkers-piece-red') && finalRow === 7) {
+                piece.classList.add('king');
+                piece.innerHTML = '👑';
+            }
+        }
+
+        console.log('[AI] Movimiento completado:', bestMove);
+        this.switchTurn(); //el cambio de turno es siempre post animacion!
     }
 
 
