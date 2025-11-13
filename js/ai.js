@@ -215,7 +215,7 @@ class AIEngine {
     minimax(boardArray, depth, maxPlayer) {
 
         /*console.count("Nodo creado"); para revisar cuantos nodos se van creando*/
-
+        console.count("Nodo creado")
         //caso terminal base: juego terminado o profundidad alcanzada
         if (depth === 0 || this.isTerminalState(boardArray)) {
             return this.evaluateBoard(boardArray);
