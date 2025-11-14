@@ -139,7 +139,7 @@ export default class Moves {
         return moves;
     }
 
-    getAllPossibleMoves(color) { //obtiene todos los movimientos posibles para un color dado
+    getAllPossibleMoves(color) { //agarramos todos los movimientos posibles para un color dado
         const pieces = this.board.getPiecesByColor(color);
         let allMoves = [];
 
@@ -151,7 +151,7 @@ export default class Moves {
         return allMoves;
     }
 
-    isOnBoard(row, col) { //verifica si la casilla esta dentro del tablero
+    isOnBoard(row, col) { //checkeamos si la casilla esta dentro del tablero
         return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
 
@@ -167,7 +167,7 @@ export default class Moves {
         });
     }
 
-    clearHighlights() { //remueve los highlights de las casillas
+    clearHighlights() { //sacamos los highlights de las casillas
         Object.values(this.board.fieldsByNum).forEach(square => {
             square.classList.remove('highlight');
             square.removeAttribute('data-capture');

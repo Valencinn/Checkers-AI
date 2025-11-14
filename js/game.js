@@ -52,7 +52,7 @@ class Game {
     }
 
     wait(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        return new Promise(resolve => setTimeout(resolve, ms)); //esto para q se vean los movimientos en el medio
     }
 
     async playAITurn() {
@@ -66,7 +66,7 @@ class Game {
             return;
         }
 
-        const {path, captures} = bestMove;
+        const { path, captures } = bestMove;
         const [startRow, startCol] = path[0];
         const startNum = startRow * 8 + startCol;
         const startSquare = this.board.fieldsByNum[startNum];
@@ -94,6 +94,7 @@ class Game {
                 if (captured) captured.remove();
             }
 
+            //hacia donde
             const jumpX = (fromCol - toCol) * squareSize;
             const jumpY = (fromRow - toRow) * squareSize;
 

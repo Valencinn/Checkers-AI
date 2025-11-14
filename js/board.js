@@ -1,13 +1,10 @@
-//importamos piezas
 import Piece from './piece.js';
-
-//creamos tablero
 
 class Board {
     constructor() {
         this.el = document.createElement('div');
         this.el.className = 'checkers-board';
-        this.fieldsByNum = {}; //objeto para guardar las casillas por su numero
+        this.fieldsByNum = {}; //para guardar las casillas por su numero
 
         this.initialize();
     }
@@ -67,7 +64,7 @@ class Board {
 
     getPiecesByColor(color) { //devuelve todas las piezas de un color dado, usado para verificar si un jugador se quedo sin movimientos
         const pieces = [];
-        Object.values(this.fieldsByNum).forEach(square => { //iteramos por todas las casillas
+        Object.values(this.fieldsByNum).forEach(square => { //vamos por todas las casillas
             const piece = square.querySelector('.checkers-piece');
             if (piece && piece.classList.contains(`checkers-piece-${color}`)) {
                 pieces.push(piece); //si la casilla tiene una pieza y es del color buscado, la agregamos al array
@@ -95,13 +92,13 @@ class Board {
                 if (!piece) {
                     rowArr.push(0); //0 = casilla vacia
                 } else if (piece.classList.contains('checkers-piece-red') && piece.classList.contains('king')) {
-                    rowArr.push(2); //2 = rey rojo (IA)
+                    rowArr.push(2); // 2= rey rojo (IA)
                 } else if (piece.classList.contains('checkers-piece-blue') && piece.classList.contains('king')) {
                     rowArr.push(-2); //-2 = rey azul (PLAYER)
                 } else if (piece.classList.contains('checkers-piece-red')) {
                     rowArr.push(1); //1 = pieza roja (IA)
                 } else if (piece.classList.contains('checkers-piece-blue')) {
-                    rowArr.push(-1); //-1 = pieza azul (PLAYER)
+                    rowArr.push(-1); //-1= pieza azul (PLAYER)
                 }
             }
             boardArr.push(rowArr);

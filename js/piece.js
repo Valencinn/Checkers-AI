@@ -16,29 +16,24 @@ class Piece {
     }
 
     place(row, col) {
-        const squareSize = 62.5; // 500px / 8 squares
+        const squareSize = 62.5; // 500px
         this.el.style.position = 'absolute';
         this.el.style.top = `${row * squareSize}px`;
         this.el.style.left = `${col * squareSize}px`;
     }
 
+    /*moveAnimation(nextRow, nextCol) {
+        const squareSize = 62.5
 
-    /*tengo que cambiar esto, lo que me pasa es que estoy tpeando el nodo en vez de moverlo, tengo que investigar como hacerlo*/
-    
-    moveAnimation(nextRow, nextCol) {
-        const squareSize = 62.5 //500/8
-
-        //calculamos la posicion en pixeles como dijo fran
         const nextTop = nextRow * squareSize;
         const nextLeft = nextCol * squareSize;
 
-        //actualizo el dom con la nueva posicion
         this.el.style.top = nextTop + 'px';
         this.el.style.left = nextLeft + 'px';
 
         this.row = nextRow;
         this.col = nextCol;
-    }
+    } */
 }
 
 export default Piece;
