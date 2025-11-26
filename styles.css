@@ -127,7 +127,6 @@ body {
     padding-bottom: 5px;
 }
 
-/* Notation System Styles */
 .notation-container {
     margin-top: 10px;
     padding: 15px;
@@ -205,7 +204,6 @@ body {
     color: #856404;
 }
 
-/* Scrollbar styling for moves list */
 .moves-list::-webkit-scrollbar {
     width: 6px;
 }
