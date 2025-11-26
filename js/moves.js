@@ -73,6 +73,26 @@ export default class Moves {
 
             this.clearHighlights();
 
+            if (this.selectedPiece) {
+                const fromNum = parseInt(this.selectedPiece.parentElement.dataset.num);
+                const toNum = parseInt(square.dataset.num);
+                const fromRow = Math.floor(fromNum / 8);
+                const fromCol = fromNum % 8;
+                const toRow = Math.floor(toNum / 8);
+                const toCol = toNum % 8;
+
+                const moveNotation = {
+                    from: [fromRow, fromCol],
+                    to: [toRow, toCol],
+                    captures: captureNum ? [[Math.floor(captureNum / 8), captureNum % 8]] : [],
+                    path: [[fromRow, fromCol], [toRow, toCol]]
+                };
+
+                this.game.recordMove(moveNotation, 'blue');
+            }
+
+            this.clearHighlights();
+
             //si comio, verificamos si puede seguir comiendo
             if (didCapture) {
                 const nextMoves = this.getValidMoves(this.selectedPiece).filter(move => move.capture !== null); //con el .filter le doy la condicion de que solo me traiga los movimientos que sean capturas

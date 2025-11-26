@@ -19,21 +19,137 @@ class Game {
         this.moves = new Moves(this.board, this);
         console.log('moves inicializados'); //verificacion del setteo de moves
 
-        /*this.positionMemory = new Map();
-        this.moveHistory = []; //aca guardamos los movimientos
-        this.positionCounter = 0; //para la repeticion
-        this.recordPosition();*/
+        //notacion y deteccion de repeticiones
+        this.positionMemory = new Map();
+        this.moveHistory = [];
+        this.positionCounter = 0;
+        this.recordPosition();
+
+        //notaciones para el html
+        this.initializeNotationDisplay();
     }
 
-    /*positionKey() {
-        return JSON.stringify /7asi se pasaria la key
+    positionKey() {
+        return JSON.stringify(this.board.boardArray());
     }
 
     recordPosition() {
+        const key = this.positionKey();
+        if (this.positionMemory.has(key)) {
+            this.positionMemory.set(key, this.positionMemory.get(key) + 1);
+        } else {
+            this.positionMemory.set(key, 1);
+        }
+        this.positionCounter++;
+    }
 
+    recordMove(move, player) {
+        const moveNotation = this.convertMoveToNotation(move, player);
+        this.moveHistory.push(moveNotation);
+        this.recordPosition();
+        this.updateNotationDisplay();
 
-    TODO ESTO VA A SER PARA LA NOTACION!
-    }*/
+        if (this.checkThreefoldRepetition()) {
+            console.log('[Game] Threefold repetition detected!');
+            this.gameDraw();
+        }
+    }
+
+    convertMoveToNotation(move, player) {
+        const { from, to, captures } = move;
+        const fromSquare = this.coordinatesToNotation(from[0], from[1]);
+        const toSquare = this.coordinatesToNotation(to[0], to[1]);
+
+        let notation = `${player === 'red' ? 'R' : 'B'} ${fromSquare}-${toSquare}`;
+
+        // Add capture notation
+        if (captures && captures.length > 0) {
+            notation += `x${captures.length}`;
+        }
+
+        // Add king promotion notation
+        const piece = this.board.fieldsByNum[from[0] * 8 + from[1]].querySelector('.checkers-piece');
+        if (piece && !piece.classList.contains('king')) {
+            if ((player === 'red' && to[0] === 7) || (player === 'blue' && to[0] === 0)) {
+                notation += ' (K)';
+            }
+        }
+
+        return {
+            move: notation,
+            fullMove: move,
+            player: player,
+            turn: Math.ceil(this.moveHistory.length / 2) + 1
+        };
+    }
+
+    coordinatesToNotation(row, col) {
+        const files = 'abcdefgh'; //el 0 es la columna a, el 7 es la columna h
+        const ranks = '87654321'; //el 0 es la fila 8, el 7 es la fila 1
+        return files[col] + ranks[row];
+    }
+
+    initializeNotationDisplay() {
+        const gameInfo = document.querySelector('.game-info');
+        if (!gameInfo) return;
+
+        //LIMPIAR cualquier notation container existente antes de crear uno nuevo
+        const existingNotation = gameInfo.querySelector('.notation-container');
+        if (existingNotation) {
+            existingNotation.remove();
+        }
+
+        const notationHTML = `
+            <div class="notation-container">
+                <div class="move-counter">Position Counter: <span id="position-counter">${this.positionCounter}</span></div>
+                <div class="moves-list" id="moves-list"></div>
+                <div class="game-status" id="game-status">Status: Playing</div>
+            </div>
+        `;
+
+        gameInfo.insertAdjacentHTML('beforeend', notationHTML);
+        this.updateNotationDisplay();
+    }
+
+    updateNotationDisplay() {
+        const movesList = document.getElementById('moves-list');
+        const positionCounter = document.getElementById('position-counter');
+        const gameStatus = document.getElementById('game-status');
+
+        if (!movesList || !positionCounter || !gameStatus) return;
+
+        positionCounter.textContent = this.positionCounter;
+
+        movesList.innerHTML = '';
+        this.moveHistory.forEach((moveRecord, index) => {
+            const moveElement = document.createElement('div');
+            moveElement.className = `move-record ${moveRecord.player}`;
+            moveElement.innerHTML = `
+                <span class="move-number">${index + 1}.</span>
+                <span class="move-notation">${moveRecord.move}</span>
+            `;
+            movesList.appendChild(moveElement);
+        });
+
+        let statusText = `Status: ${this.gameStatus === 'playing' ? 'Playing' : 'Game Over'}`;
+        if (this.winner) {
+            statusText += ` | Winner: ${this.winner}`;
+        }
+        statusText += ` | Current: ${this.currentPlayer}`;
+        gameStatus.textContent = statusText;
+
+        movesList.scrollTop = movesList.scrollHeight;
+    }
+
+    checkThreefoldRepetition() {
+        for (let count of this.positionMemory.values()) {
+            if (count >= 3) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     gameDraw() {
         this.gameStatus = 'ended';
@@ -124,6 +240,8 @@ class Game {
             }
         }
 
+        this.recordMove(bestMove, 'red');
+
         console.log('[AI] Movimiento completado:', bestMove);
         this.switchTurn(); //el cambio de turno es siempre post animacion!
     }
@@ -149,8 +267,13 @@ class Game {
         }
     }
 
-    clear() { //limpia el tablero
+    clear() {
         this.container.innerHTML = '';
+
+        const notationContainer = document.querySelector('.notation-container');
+        if (notationContainer) {
+            notationContainer.remove();
+        }
     }
 
     isGameEnded() { //verifica si el juego termino

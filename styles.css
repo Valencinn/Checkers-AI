@@ -113,6 +113,8 @@ body {
     padding: 15px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .notation-title {
@@ -125,15 +127,112 @@ body {
     padding-bottom: 5px;
 }
 
+/* Notation System Styles */
+.notation-container {
+    margin-top: 10px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.notation-container h3 {
+    margin: 0 0 10px 0;
+    color: #495057;
+    font-size: 1.1em;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+}
+
+.move-counter {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-bottom: 10px;
+    padding: 5px;
+    background: #e9ecef;
+    border-radius: 4px;
+}
+
+.moves-list {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+    background: white;
+    max-height: 200px;
+}
+
+.move-record {
+    padding: 5px 8px;
+    margin: 2px 0;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.move-record.red {
+    background: #ffe6e6;
+    border-left: 3px solid #dc3545;
+}
+
+.move-record.blue {
+    background: #e6f3ff;
+    border-left: 3px solid #007bff;
+}
+
+.move-number {
+    font-weight: bold;
+    color: #495057;
+    margin-right: 8px;
+}
+
+.move-notation {
+    color: #212529;
+}
+
+.game-status {
+    margin-top: 10px;
+    padding: 8px;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #856404;
+}
+
+/* Scrollbar styling for moves list */
+.moves-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.moves-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.moves-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.moves-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
 .buttons-container {
     display: flex;
     gap: 15px;
     justify-content: center;
-    margin-top: 350px;
+    margin-top: auto;
+    padding-top: 15px;
 }
 
 .new-game {
-    margin-top: 380px;
     padding: 10px 20px;
     background-color: #345;
     color: white;
@@ -147,8 +246,4 @@ body {
 .new-game:hover {
     background-color: #234;
     transform: translateY(-2px);
-}
-
-.new-game:hover {
-    background-color: #6d4c41;
 }
