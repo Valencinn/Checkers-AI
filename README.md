@@ -12,7 +12,7 @@ The UI is built with native web technologies and dynamically rendered through Ja
 
 ✨ Features
 
-✔ Object-Oriented Architecture (Board, Game, Piece, AI, Renderer, etc.)
+✔ Object-Oriented Architecture (Board, Game, Piece, AI, etc.)
 
 ✔ AI opponent using Minimax + DFS search
 
