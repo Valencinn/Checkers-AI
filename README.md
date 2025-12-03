@@ -1,16 +1,16 @@
-🏁 Checkers AI
+## 🏁 Checkers AI
 
 A fully playable Checkers game built with JavaScript, HTML and CSS, implementing an AI opponent using Minimax and Depth-First Search (DFS).
 Developed as a university project focused on search algorithms and object-oriented programming.
 
-🎮 Overview
+## 🎮 Overview
 
 This project implements the classic Checkers game with a modular, OOP-based structure.
 Players can face an AI that simulates move trees, evaluates board states, and selects optimal decisions using Minimax.
 
 The UI is built with native web technologies and dynamically rendered through JavaScript.
 
-✨ Features
+## ✨ Features
 
 ✔ Object-Oriented Architecture (Board, Game, Piece, AI, etc.)
 
@@ -27,5 +27,5 @@ The UI is built with native web technologies and dynamically rendered through Ja
 ## 🚀 Technologies Used
 
 - JavaScript
-- HTML5
+- HTML
 - CSS
