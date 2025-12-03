@@ -23,3 +23,9 @@ The UI is built with native web technologies and dynamically rendered through Ja
 ✔ Win/loss detection and turn management
 
 ✔ 100% browser-based — no dependencies or frameworks
+
+## 🚀 Technologies Used
+
+- JavaScript
+- HTML5
+- CSS
