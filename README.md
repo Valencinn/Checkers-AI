@@ -24,8 +24,11 @@ The UI is built with native web technologies and dynamically rendered through Ja
 
 ✔ 100% browser-based — no dependencies or frameworks
 
+✔ Deployed in Vercel
+
 ## 🚀 Technologies Used
 
 - JavaScript
 - HTML
 - CSS
+- Vercel
