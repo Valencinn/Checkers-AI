@@ -1,26 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkers AI</title>
-    <script type="module" src="./js/main.js"></script>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f8d5ba"><meta name="description" content="A classic game. A clever opponent. Play illustrated checkers against an AI, right in your browser.">
+<title>Checkers Club — Play against AI</title><link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="styles.css"><script type="module" src="./js/main.js"></script>
 </head>
-
-<body>
-
-    <div id="preloader"></div>
-
-    <h1 class="title">Checkers AI</h1>
-    <div class="checkers-wrapper">
-        <div id="board"></div>
-        <div class="game-info">
-            <h2 class="notation-title">Notation</h2>
-            <button id="new-game" class="new-game">New game</button>
-        </div>
-    </div>
-</body>
-
-</html>
+<body><div class="site-shell">
+<header class="site-header"><a class="brand" href="./" aria-label="Checkers Club home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>checkers club<span class="brand-dot">®</span></a><span class="header-note">A little strategy. A lot of fun.</span><a class="rules-link" href="#how-to-play">How to play <span aria-hidden="true">↗</span></a></header>
+<main>
+<section class="intro" aria-labelledby="page-title"><div><p class="eyebrow"><span></span> YOUR NEXT GOOD MOVE</p><h1 id="page-title">Small board.<br>Big <em>possibilities.</em></h1></div><p class="intro-copy">An old-school classic with a clever opponent.<br>Pick a piece, find your rhythm, make your move.</p><span class="doodle-star" aria-hidden="true">✳</span></section>
+<section class="play-area" aria-label="Checkers game">
+<div class="board-stage">
+<div class="opponent-label"><span class="mini-piece navy" aria-hidden="true"></span><div><strong>The clever one</strong><span>YOUR AI OPPONENT</span></div><span class="player-count" id="ai-count">12 pieces</span></div>
+<div class="board-frame"><div class="rank-labels" aria-hidden="true"><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></div><div id="board" aria-label="Checkers board"></div><div class="file-labels" aria-hidden="true"><span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span></div></div>
+<div class="opponent-label you-label"><span class="mini-piece yellow" aria-hidden="true"></span><div><strong>The bright one. That's you.</strong><span>PLAYING WITH YELLOW</span></div><span class="player-count" id="player-count">12 pieces</span></div>
+</div>
+<aside class="game-sidebar"><div class="turn-card"><span class="card-index">01 / LET'S PLAY</span><div class="turn-heading"><h2 id="turn-title">Your move!</h2><span class="turn-illustration" aria-hidden="true"><i></i><i></i></span></div><p id="turn-description">You're up first. Select a yellow piece to see where it can go.</p><div class="turn-tag" id="turn-tag"><span></span> Yellow goes first</div></div>
+<div class="game-info"><div class="notation-heading"><h2 class="notation-title">The move journal</h2><span aria-hidden="true">↙</span></div><p class="journal-caption">Every little move tells a story.</p></div>
+<button id="new-game" class="new-game"><span>Start a fresh game</span><span aria-hidden="true">↻</span></button><p class="game-footnote">No clock. No rush. Just a good game.</p></aside>
+</section>
+<section class="how-to-play" id="how-to-play" aria-labelledby="rules-title"><div class="rules-intro"><p class="eyebrow">THE SHORT VERSION</p><h2 id="rules-title">Easy to learn.<br>Lovely to master.</h2></div><div class="rule"><span class="rule-art art-move" aria-hidden="true">↗</span><h3>Make your move</h3><p>Move diagonally, one square forward. The marked squares show your options.</p></div><div class="rule"><span class="rule-art art-jump" aria-hidden="true"><i></i><i></i>↗</span><h3>Take the leap</h3><p>Jump over an opponent to capture. If a capture is available, you have to take it.</p></div><div class="rule"><span class="rule-art art-king" aria-hidden="true">♛</span><h3>Earn your crown</h3><p>Reach the far side to become a king and move in both directions. Take every piece, or leave your opponent no moves, to win.</p></div></section>
+</main><footer><a class="footer-brand" href="./">checkers club</a><span>Made for the love of the game.</span><span class="footer-end">YOU + A LITTLE ARTIFICIAL INTELLIGENCE <span aria-hidden="true">✳</span></span></footer>
+</div></body></html>

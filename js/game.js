@@ -60,7 +60,7 @@ class Game {
         const fromSquare = this.coordinatesToNotation(from[0], from[1]);
         const toSquare = this.coordinatesToNotation(to[0], to[1]);
 
-        let notation = `${player === 'red' ? 'R' : 'B'} ${fromSquare}-${toSquare}`;
+        let notation = `${fromSquare} → ${toSquare}`;
 
         // Add capture notation
         if (captures && captures.length > 0) {
@@ -101,9 +101,9 @@ class Game {
 
         const notationHTML = `
             <div class="notation-container">
-                <div class="move-counter">Position Counter: <span id="position-counter">${this.positionCounter}</span></div>
-                <div class="moves-list" id="moves-list"></div>
-                <div class="game-status" id="game-status">Status: Playing</div>
+                <div class="move-counter">Moves played <span id="position-counter">0</span></div>
+                <div class="moves-list" id="moves-list" role="log" aria-label="Move history" aria-live="polite"></div>
+                <div class="game-status" id="game-status" role="status"></div>
             </div>
         `;
 
@@ -118,9 +118,12 @@ class Game {
 
         if (!movesList || !positionCounter || !gameStatus) return;
 
-        positionCounter.textContent = this.positionCounter;
+        positionCounter.textContent = this.moveHistory.length.toString().padStart(2, '0');
 
         movesList.innerHTML = '';
+        if (!this.moveHistory.length) {
+            movesList.innerHTML = '<div class="empty-journal"><span aria-hidden="true">↗</span>Your first move starts the story.</div>';
+        }
         this.moveHistory.forEach((moveRecord, index) => {
             const moveElement = document.createElement('div');
             moveElement.className = `move-record ${moveRecord.player}`;
@@ -131,12 +134,14 @@ class Game {
             movesList.appendChild(moveElement);
         });
 
-        let statusText = `Status: ${this.gameStatus === 'playing' ? 'Playing' : 'Game Over'}`;
-        if (this.winner) {
-            statusText += ` | Winner: ${this.winner}`;
-        }
-        statusText += ` | Current: ${this.currentPlayer}`;
-        gameStatus.textContent = statusText;
+        const ended = this.isGameEnded();
+        const yourTurn = this.currentPlayer === 'blue';
+        gameStatus.textContent = ended ? (this.winner === 'draw' ? 'A well-matched draw.' : this.winner === 'blue' ? 'Yellow wins. Nicely played!' : 'Blue wins. Another round?') : yourTurn ? 'Your turn · Playing yellow' : 'AI is thinking · Playing blue';
+        document.getElementById('turn-title').textContent = ended ? (this.winner === 'draw' ? 'A perfect tie.' : this.winner === 'blue' ? 'Well played!' : 'Clever moves!') : yourTurn ? 'Your move!' : 'Thinking…';
+        document.getElementById('turn-description').textContent = ended ? 'Every game is a new possibility. Ready for another round?' : yourTurn ? 'Select a yellow piece, then choose one of the marked squares.' : 'A little strategy in the making. Your opponent is finding its next move.';
+        document.getElementById('turn-tag').innerHTML = `<span></span> ${ended ? 'Game complete' : yourTurn ? 'Yellow · Your turn' : 'Blue · AI opponent'}`;
+        document.getElementById('ai-count').textContent = `${this.board.getPiecesByColor('red').length} pieces`;
+        document.getElementById('player-count').textContent = `${this.board.getPiecesByColor('blue').length} pieces`;
 
         movesList.scrollTop = movesList.scrollHeight;
     }
@@ -154,6 +159,7 @@ class Game {
     gameDraw() {
         this.gameStatus = 'ended';
         this.winner = 'draw';
+        this.updateNotationDisplay();
         console.log('[Game] Game Over! Empate!');
     }
 
@@ -161,9 +167,10 @@ class Game {
         this.currentPlayer = this.currentPlayer === 'red' ? 'blue' : 'red';
         console.log(`[Game] Ahora es el turno de: ${this.currentPlayer}`);
         this.checkGameStatus();
+        this.updateNotationDisplay();
 
         if (this.currentPlayer === 'red' && !this.isGameEnded()) {
-            setTimeout(() => this.playAITurn(), 500);
+            this.aiTimer = setTimeout(() => this.playAITurn(), 500);
         }
     }
 
@@ -172,6 +179,7 @@ class Game {
     }
 
     async playAITurn() {
+        if (this.disposed || this.isGameEnded()) return;
         const ai = new AIEngine();
         const boardArray = this.board.boardArray();
         const bestMove = ai.getBestMove(boardArray, 3);
@@ -227,6 +235,7 @@ class Game {
 
             //para q se vea todo
             await this.wait(300);
+            if (this.disposed) return;
             piece.style.transform = '';
             piece.style.transition = '';
             piece.style.zIndex = '';
@@ -236,7 +245,6 @@ class Game {
         if (!piece.classList.contains('king')) {
             if (piece.classList.contains('checkers-piece-red') && finalRow === 7) {
                 piece.classList.add('king');
-                piece.innerHTML = '👑';
             }
         }
 
@@ -268,6 +276,8 @@ class Game {
     }
 
     clear() {
+        this.disposed = true;
+        clearTimeout(this.aiTimer);
         this.container.innerHTML = '';
 
         const notationContainer = document.querySelector('.notation-container');

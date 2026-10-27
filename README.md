@@ -32,3 +32,17 @@ The UI is built with native web technologies and dynamically rendered through Ja
 - HTML
 - CSS
 - Vercel
+
+## Local preview
+
+Serve the project directory with any static HTTP server (ES modules require HTTP):
+
+```sh
+python -m http.server 4173
+```
+
+Open `http://localhost:4173`. No build step or dependencies are required.
+
+## Checkers Club design
+
+The interface uses an illustrated blue-and-cream board, yellow player pieces, a peach background, and responsive layouts. The sidebar shows the current turn, piece counts, and move journal. Rules are included below the game. Squares are keyboard-operable buttons, and status changes are announced to assistive technology. Reduced-motion preferences are respected. Google Fonts are optional; system fallbacks keep the game usable without them.

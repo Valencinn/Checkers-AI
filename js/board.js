@@ -19,7 +19,9 @@ class Board {
     }
 
     createGrid(row, col) { //creamos el div de las casillas
-        const el = document.createElement('div');
+        const el = document.createElement('button');
+        el.type = 'button';
+        el.setAttribute('aria-label', `Square ${'abcdefgh'[col]}${8 - row}`);
         el.className = "checkers-grid ";
 
         const dark = Boolean((row + col) % 2); //para que se alternen los colores

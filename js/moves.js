@@ -22,7 +22,7 @@ export default class Moves {
     }
 
     handleClick(square) {
-        if (this.game.isGameEnded()) {
+        if (this.game.isGameEnded() || this.game.currentPlayer !== 'blue') {
             console.log('Game is ended, no more moves allowed');
             return;
         }
@@ -38,6 +38,7 @@ export default class Moves {
 
             this.clearHighlights();
             this.selectedPiece = piece;
+            piece.classList.add('selected');
 
             //mostrar las capturas obligatorias si las hay
             const allPieces = this.board.getPiecesByColor(this.game.currentPlayer);
@@ -69,12 +70,13 @@ export default class Moves {
             const captureAttr = square.getAttribute('data-capture'); //captureAttr es el numero de la casilla de la pieza capturada
             const captureNum = captureAttr ? captureAttr : null;
 
+            const originNum = parseInt(this.selectedPiece.parentElement.dataset.num);
             const didCapture = this.movePiece(this.selectedPiece, square, captureNum);
 
             this.clearHighlights();
 
             if (this.selectedPiece) {
-                const fromNum = parseInt(this.selectedPiece.parentElement.dataset.num);
+                const fromNum = originNum;
                 const toNum = parseInt(square.dataset.num);
                 const fromRow = Math.floor(fromNum / 8);
                 const fromCol = fromNum % 8;
@@ -97,6 +99,7 @@ export default class Moves {
             if (didCapture) {
                 const nextMoves = this.getValidMoves(this.selectedPiece).filter(move => move.capture !== null); //con el .filter le doy la condicion de que solo me traiga los movimientos que sean capturas
                 if (nextMoves.length > 0) {
+                    this.selectedPiece.classList.add('selected');
                     this.highlightMoves(nextMoves);
                     return; //no cambia turno todavia
                 }
@@ -188,6 +191,7 @@ export default class Moves {
     }
 
     clearHighlights() { //sacamos los highlights de las casillas
+        this.board.el.querySelectorAll('.selected').forEach(piece => piece.classList.remove('selected'));
         Object.values(this.board.fieldsByNum).forEach(square => {
             square.classList.remove('highlight');
             square.removeAttribute('data-capture');
@@ -244,7 +248,6 @@ export default class Moves {
         const color = piece.classList.contains('checkers-piece-red') ? 'red' : 'blue';
         if ((color === 'red' && row === 7) || (color === 'blue' && row === 0)) {
             piece.classList.add('king');
-            piece.innerHTML = '👑';
         }
 
         return didCapture;
